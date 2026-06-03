@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NexWave Lighting — Bosso Quote</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0d1117;
+  --panel: #141b22;
+  --panel2: #1a2332;
+  --border: #1e2d3d;
+  --border2: #253444;
+  --accent: #1aacac;
+  --accent-dim: rgba(26,172,172,0.12);
+  --accent-border: rgba(26,172,172,0.25);
+  --gold: #d4a017;
+  --gold-dim: rgba(212,160,23,0.12);
+  --green: #1fc87a;
+  --green-dim: rgba(31,200,122,0.10);
+  --red: #e05252;
+  --text: #ccd6e0;
+  --text-bright: #e8f0f8;
+  --muted: #4a6070;
+  --label: #6a8898;
+  --font: 'Barlow', sans-serif;
+  --font-cond: 'Barlow Condensed', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: #0a0f15;
+  border-bottom: 2px solid var(--accent);
+  padding: 0 32px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo { font-family: var(--font-cond); font-size: 22px; font-weight: 700; letter-spacing: 3px; }
+.brand-nex { color: var(--text-bright); }
+.brand-wave { color: var(--accent); }
+.brand-tag {
+  font-family: var(--font-cond);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-left: 1px solid var(--border2);
+  padding-left: 12px;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.quote-chip {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  padding: 4px 12px;
+  border-radius: 4px;
+  min-width: 100px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.tbtn {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--label);
+  transition: all 0.15s;
+  letter-spacing: 0.5px;
+}
+.tbtn:hover { border-color: var(--accent); color: var(--accent); }
+.tbtn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #071212;
+  font-weight: 600;
+}
+.tbtn-primary:hover { background: #1dc8c8; color: #071212; }
+
+/* ── SUMMARY STRIP ── */
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.strip-cell {
+  background: var(--panel);
+  padding: 12px 24px;
+}
+.strip-label {
+  font-family: var(--font-cond);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.strip-value {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.strip-value.green { color: var(--green); }
+.strip-value.gold { color: var(--gold); }
+.strip-value.dim { color: var(--muted); }
+
+/* ── MAIN ── */
+.main {
+  display: flex;
+  min-height: calc(100vh - 52px - 58px);
+  overflow: hidden;
+}
+
+/* ── FORM SIDE ── */
+.form-side {
+  flex: 0 0 auto;
+  width: 58%;
+  min-width: 340px;
+  border-right: none;
+  overflow-y: auto;
+}
+
+/* ── RESIZER ── */
+.resizer {
+  flex: 0 0 5px;
+  width: 5px;
+  background: var(--border);
+  cursor: col-resize;
+  transition: background 0.15s;
+  position: relative;
+  z-index: 10;
+}
+.resizer:hover, .resizer.dragging { background: var(--accent); }
+.resizer::after {
+  content: '⋮';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+}
+.resizer:hover::after, .resizer.dragging::after { color: var(--accent); }
+
+/* ── OUTPUT SIDE ── */
+.output-side {
+  flex: 1 1 auto;
+  min-width: 280px;
+  background: var(--panel);
+  overflow-y: auto;
+  height: calc(100vh - 52px - 58px);
+  position: sticky;
+  top: 52px;
+}
+
+/* ── SECTION ── */
+.section {
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.section-head {
+  padding: 10px 24px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-icon {
+  width: 18px; height: 18px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.section-title {
+  font-family: var(--font-cond);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+}
+.section-body {
+  padding: 16px 24px;
+  background: var(--bg);
+}
+
+/* ── FORM GRID ── */
+.fgrid { display: grid; gap: 12px; margin-bottom: 12px; }
+.fgrid.g2 { grid-template-columns: 1fr 1fr; }
+.fgrid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.fgrid.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.fgrid.gA { grid-template-columns: 2fr 1fr; }
+
+.frow { display: flex; flex-direction: column; gap: 4px; }
+.frow label {
+  font-family: var(--font-cond);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.frow input, .frow select, .frow textarea {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--text-bright);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 8px 10px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-appearance: none;
+  width: 100%;
+}
+.frow select option {
+  background: #1a2332;
+  color: #e8f0f8;
+}
+.frow input:focus, .frow select:focus, .frow textarea:focus {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+.frow input::placeholder { color: var(--muted); }
+
+/* ── DIFFICULTY ── */
+.diff-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.diff-btn {
+  padding: 8px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  background: var(--panel2);
+  font-family: var(--font-cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.diff-btn.easy { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+.diff-btn.normal { border-color: #3a8fd4; background: rgba(58,143,212,0.10); color: #3a8fd4; }
+.diff-btn.hard { border-color: var(--red); background: rgba(224,82,82,0.10); color: var(--red); }
+
+/* ── MODE TABS ── */
+.mode-tabs { display: flex; border: 1px solid var(--border2); border-radius: 4px; overflow: hidden; }
+.mode-tab {
+  flex: 1;
+  padding: 7px 10px;
+  font-family: var(--font-cond);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  background: var(--panel2);
+  cursor: pointer;
+  text-align: center;
+  border-right: 1px solid var(--border2);
+  transition: all 0.15s;
+}
+.mode-tab:last-child { border-right: none; }
+.mode-tab.on { background: var(--accent); color: #071212; font-weight: 700; }
+
+/* ── SEGMENT TABLE ── */
+.seg-wrap { overflow-x: auto; }
+.seg-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 400px;
+}
+.seg-table thead tr {
+  background: var(--panel2);
+  border-bottom: 1px solid var(--border2);
+}
+.seg-table th {
+  font-family: var(--font-cond);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  padding: 6px 10px;
+  text-align: left;
+}
+.seg-table td { padding: 3px 6px; border-bottom: 1px solid var(--border); }
+.seg-table tr:last-child td { border-bottom: none; }
+.seg-table input, .seg-table select {
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--text-bright);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 5px 8px;
+  outline: none;
+  transition: all 0.12s;
+}
+.seg-table select option {
+  background: #1a2332;
+  color: #e8f0f8;
+}
+.seg-table input:focus, .seg-table select:focus {
+  border-color: var(--accent);
+  background: var(--panel2);
+}
+.seg-table input:hover, .seg-table select:hover { background: var(--panel2); }
+.seg-del {
+  color: var(--border2);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 6px;
+  border-radius: 3px;
+  display: block;
+  text-align: center;
+  transition: all 0.12s;
+}
+.seg-del:hover { color: var(--red); background: rgba(224,82,82,0.10); }
+.add-row {
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  border: 1px dashed var(--border2);
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: var(--font-cond);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.15s;
+}
+.add-row:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+/* ── JUMP LOGGER ── */
+.jump-inp-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.jump-inp-row input {
+  flex: 1;
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--text-bright);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 8px 10px;
+  outline: none;
+}
+.jump-inp-row input:focus { border-color: var(--accent); }
+.jump-btn {
+  padding: 8px 16px;
+  background: var(--accent);
+  border: none;
+  border-radius: 4px;
+  color: #071212;
+  font-family: var(--font-cond);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+.jump-btn:hover { background: #1dc8c8; }
+.tally-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.tally-chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.jump-list { width: 100%; border-collapse: collapse; }
+.jump-list td { padding: 4px 8px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.jump-list tr:last-child td { border-bottom: none; }
+.wtag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 3px;
+  font-family: var(--mono);
+}
+.w2 { background: var(--green-dim); color: var(--green); }
+.w5 { background: rgba(58,143,212,0.12); color: #3a8fd4; }
+.w10 { background: rgba(224,82,82,0.12); color: var(--red); }
+.j-del { color: var(--border2); cursor: pointer; font-size: 14px; }
+.j-del:hover { color: var(--red); }
+
+/* ── OUTPUT PANEL ── */
+.out-head {
+  padding: 12px 18px;
+  background: var(--panel2);
+  border-bottom: 1px solid var(--border2);
+  font-family: var(--font-cond);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+.price-hero {
+  padding: 20px 18px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.price-customer { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.price-name { font-size: 16px; font-weight: 600; color: var(--text-bright); margin-bottom: 10px; }
+.price-label { font-family: var(--font-cond); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.price-amount { font-family: var(--mono); font-size: 42px; font-weight: 600; color: var(--accent); line-height: 1; }
+.price-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+.out-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.stat-cell {
+  background: var(--panel2);
+  padding: 10px 14px;
+}
+.stat-lbl { font-family: var(--font-cond); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 3px; }
+.stat-val { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text-bright); }
+.stat-val.acc { color: var(--accent); }
+.stat-val.grn { color: var(--green); }
+
+/* ── OUTPUT ROWS ── */
+.out-section { border-bottom: 1px solid var(--border); }
+.out-section-head {
+  padding: 8px 18px;
+  background: var(--panel2);
+  font-family: var(--font-cond);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.out-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 18px;
+  border-bottom: 1px solid rgba(30,45,61,0.5);
+  font-size: 12px;
+}
+.out-row:last-child { border-bottom: none; }
+.out-row.total {
+  background: var(--green-dim);
+  border-top: 1px solid rgba(31,200,122,0.2);
+  font-weight: 600;
+  font-size: 13px;
+}
+.out-row.total-dark {
+  background: var(--panel2);
+  font-weight: 700;
+  font-size: 14px;
+}
+.olbl { color: var(--label); }
+.oval { font-family: var(--mono); font-size: 12px; color: var(--text-bright); }
+.oval.grn { color: var(--green); }
+.oval.acc { color: var(--accent); }
+.oval.red { color: var(--red); }
+.obadge {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  padding: 1px 8px;
+  border-radius: 3px;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* ── HCP OUTPUT ── */
+.hcp-block {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.hcp-unit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: var(--accent-dim);
+  border-bottom: 1px solid var(--accent-border);
+}
+.hcp-ulabel { font-size: 11px; color: var(--accent); }
+.hcp-usub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.hcp-uprice { font-family: var(--mono); font-size: 34px; font-weight: 600; color: var(--accent); }
+.hcp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.hcp-row:last-child { border-bottom: none; }
+.hlbl { color: var(--label); }
+.hval { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text-bright); }
+.hval.internal { color: var(--muted); font-weight: 400; }
+.hcp-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: #0a0f15;
+  border-top: 2px solid var(--accent);
+}
+.htlbl { font-family: var(--font-cond); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--label); }
+.htval { font-family: var(--mono); font-size: 26px; font-weight: 600; color: var(--accent); }
+.margin-ok {
+  margin: 0 18px 12px;
+  padding: 6px 12px;
+  background: var(--green-dim);
+  border: 1px solid rgba(31,200,122,0.2);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--green);
+  text-align: center;
+}
+
+/* EMPTY */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  color: var(--muted);
+  padding: 40px;
+  text-align: center;
+}
+.empty-icon { font-size: 36px; opacity: 0.2; }
+.empty p { font-size: 12px; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* PRINT */
+#printContainer { display: none; }
+@media print {
+  body { background: white !important; }
+  .topbar, .summary-strip, .main { display: none !important; }
+  #printContainer { display: block !important; }
+  @page { margin: 12mm; size: letter; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-logo"><span class="brand-nex">NEX</span><span class="brand-wave">WAVE</span></div>
+    <div class="brand-tag">Bosso Quote Tool</div>
+  </div>
+  <div class="topbar-right">
+    <div class="quote-chip" id="quoteChip">QUOTE #—</div>
+    <button class="tbtn tbtn-primary" onclick="printQuote()">🖨 Print</button>
+    <button class="tbtn" onclick="resetAll()">↺ New Quote</button>
+  </div>
+</div>
+
+<!-- SUMMARY STRIP -->
+<div class="summary-strip">
+  <div class="strip-cell">
+    <div class="strip-label">Total Installed Price</div>
+    <div class="strip-value" id="s-final">$0.00</div>
+  </div>
+  <div class="strip-cell">
+    <div class="strip-label">Total Cost</div>
+    <div class="strip-value gold" id="s-cost">$0.00</div>
+  </div>
+  <div class="strip-cell">
+    <div class="strip-label">Gross Profit</div>
+    <div class="strip-value green" id="s-profit">$0.00</div>
+  </div>
+  <div class="strip-cell">
+    <div class="strip-label">Actual Margin</div>
+    <div class="strip-value dim" id="s-margin">—</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ══ FORM SIDE ══ -->
+  <div class="form-side">
+
+    <!-- CUSTOMER -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-icon">C</div>
+        <div class="section-title">Customer Information</div>
+      </div>
+      <div class="section-body">
+        <div class="fgrid g2">
+          <div class="frow"><label>Customer Name</label><input type="text" id="customerName" placeholder="Full name" oninput="liveCalc()"/></div>
+          <div class="frow"><label>HCP Quote #</label><input type="number" id="hcpQuoteNum" placeholder="e.g. 2009" oninput="liveCalc()"/></div>
+        </div>
+        <div class="fgrid g3">
+          <div class="frow"><label>Address</label><input type="text" id="customerAddress" placeholder="Street address" oninput="liveCalc()"/></div>
+          <div class="frow"><label>City / Zip</label><input type="text" id="customerCityZip" placeholder="City, TX 00000" oninput="liveCalc()"/></div>
+          <div class="frow"><label>Salesman</label><input type="text" id="salesMan" placeholder="Name" oninput="liveCalc()"/></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOB SETTINGS -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-icon">J</div>
+        <div class="section-title">Job Settings</div>
+      </div>
+      <div class="section-body">
+        <div class="fgrid g4">
+          <div class="frow">
+            <label>Crew Size</label>
+            <select id="crewSize" onchange="liveCalc()">
+              <option value="1">1 Person</option>
+              <option value="2" selected>2 People</option>
+              <option value="3">3 People</option>
+              <option value="4">4 People</option>
+              <option value="5">5 People</option>
+              <option value="6">6 People</option>
+            </select>
+          </div>
+          <div class="frow"><label>Work Hrs / Day</label><input type="number" id="workHoursDay" value="10" min="4" max="14" oninput="liveCalc()"/></div>
+          <div class="frow">
+            <label>Track Style</label>
+            <select id="trackStyle" onchange="liveCalc()">
+              <option>U Track</option><option>Flap Track</option><option selected>Back Track</option>
+            </select>
+          </div>
+          <div class="frow">
+            <label>Track Color</label>
+            <select id="trackColor" onchange="liveCalc()">
+              <option>Black</option><option>White</option><option>Linen</option><option>Cameo</option>
+              <option>Victorian Grey</option><option>Musket Brown</option><option>Dark Bronze</option>
+              <option>Charcoal Grey</option><option>Wicker</option><option>Pebblestone Clay</option>
+              <option>Terra Bronze</option><option>Desert Sand</option><option>Classic Cream</option>
+              <option>Harbor Grey</option><option>Almond</option><option>Royal Brown</option>
+              <option>Sandstone</option><option>Russet Red</option><option>Evergreen</option>
+              <option>Montana Suede</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow" style="max-width:300px;">
+          <label>Difficulty</label>
+          <div class="diff-row">
+            <button class="diff-btn" id="pill-Easy" onclick="setDiff('Easy')">Easy</button>
+            <button class="diff-btn normal" id="pill-Normal" onclick="setDiff('Normal')">Normal</button>
+            <button class="diff-btn" id="pill-Hard" onclick="setDiff('Hard')">Hard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEGMENTS -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-icon">S</div>
+        <div class="section-title">Roofline Segments</div>
+      </div>
+      <div class="section-body">
+        <div class="seg-wrap">
+          <table class="seg-table">
+            <thead>
+              <tr>
+                <th style="width:30px;">#</th>
+                <th>Area</th>
+                <th style="width:120px;">Measured Feet</th>
+                <th style="width:30px;"></th>
+              </tr>
+            </thead>
+            <tbody id="segBody"></tbody>
+          </table>
+        </div>
+        <button class="add-row" onclick="addSeg()">+ Add Segment</button>
+      </div>
+    </div>
+
+    <!-- HOMERUN & JUMPS -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-icon">W</div>
+        <div class="section-title">Homerun &amp; Jumps</div>
+      </div>
+      <div class="section-body">
+        <div class="fgrid gA" style="margin-bottom:14px;">
+          <div class="frow">
+            <label>Homerun Distance (ft) — controller to first LED</label>
+            <input type="number" id="homerunFt" value="30" min="0" oninput="liveCalc()"/>
+          </div>
+          <div class="frow">
+            <label>Wire Tally</label>
+            <div class="tally-row" style="margin-top:4px;margin-bottom:0;">
+              <span class="tally-chip" id="t10">10ft: 0</span>
+              <span class="tally-chip" id="t5">5ft: 0</span>
+              <span class="tally-chip" id="t2">2ft: 0</span>
+            </div>
+          </div>
+        </div>
+        <div class="jump-inp-row">
+          <input type="number" id="jdist" placeholder="Gap distance (ft)" min="0" step="0.5"/>
+          <button class="jump-btn" onclick="addJump()">+ Add Jump</button>
+        </div>
+        <table class="jump-list" id="jList">
+          <tr><td colspan="3" style="color:var(--muted);font-style:italic;padding:8px 0;">No jumps logged yet</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-icon">$</div>
+        <div class="section-title">Pricing Settings</div>
+      </div>
+      <div class="section-body">
+        <div class="fgrid g4">
+
+          <!-- MARGIN -->
+          <div>
+            <div class="frow" style="margin-bottom:6px;"><label>Margin Mode</label>
+              <div class="mode-tabs">
+                <div class="mode-tab on" id="mM-Preset" onclick="setM('Preset')">Preset</div>
+                <div class="mode-tab" id="mM-Custom" onclick="setM('Custom')">Custom</div>
+              </div>
+            </div>
+            <div id="mPreset"><div class="frow"><label>Margin %</label>
+              <select id="marginPreset" onchange="liveCalc()">
+                <option value="0.30">30%</option><option value="0.35" selected>35%</option>
+                <option value="0.40">40%</option><option value="0.45">45%</option><option value="0.50">50%</option>
+              </select></div>
+            </div>
+            <div id="mCustom" style="display:none;"><div class="frow"><label>Custom %</label>
+              <input type="number" id="marginCustom" value="35" min="0" max="80" oninput="liveCalc()"/></div>
+            </div>
+          </div>
+
+          <!-- BUFFER -->
+          <div>
+            <div class="frow" style="margin-bottom:6px;"><label>Buffer Mode</label>
+              <div class="mode-tabs">
+                <div class="mode-tab on" id="bM-Pct" onclick="setBuf('Pct')">%</div>
+                <div class="mode-tab" id="bM-Flat" onclick="setBuf('Flat')">$</div>
+              </div>
+            </div>
+            <div id="bPct"><div class="frow"><label>Buffer %</label>
+              <select id="miscBufferPct" onchange="liveCalc()">
+                <option value="0">0%</option><option value="0.05">5%</option>
+                <option value="0.10" selected>10%</option><option value="0.15">15%</option><option value="0.20">20%</option>
+              </select></div>
+            </div>
+            <div id="bFlat" style="display:none;"><div class="frow"><label>Buffer $</label>
+              <input type="number" id="miscBufferFlat" value="0" min="0" oninput="liveCalc()"/></div>
+            </div>
+          </div>
+
+          <!-- DISCOUNT -->
+          <div>
+            <div class="frow" style="margin-bottom:6px;"><label>Discount</label>
+              <div class="mode-tabs">
+                <div class="mode-tab on" id="dM-None" onclick="setDis('None')">None</div>
+                <div class="mode-tab" id="dM-Pct" onclick="setDis('Pct')">%</div>
+                <div class="mode-tab" id="dM-Flat" onclick="setDis('Flat')">$</div>
+              </div>
+            </div>
+            <div id="dPct" style="display:none;"><div class="frow"><label>Discount %</label>
+              <input type="number" id="discountPct" value="0" min="0" max="50" oninput="liveCalc()"/></div>
+            </div>
+            <div id="dFlat" style="display:none;"><div class="frow"><label>Discount $</label>
+              <input type="number" id="discountFlat" value="0" min="0" oninput="liveCalc()"/></div>
+            </div>
+            <div id="dNone"><div class="frow"><label>&nbsp;</label>
+              <input type="text" value="No discount" disabled style="color:var(--muted);cursor:default;"/></div>
+            </div>
+          </div>
+
+          <!-- COMMISSION -->
+          <div>
+            <div class="frow" style="margin-bottom:6px;"><label>Commission</label>
+              <div class="mode-tabs">
+                <div class="mode-tab on" id="cM-Pct" onclick="setComm('Pct')">%</div>
+                <div class="mode-tab" id="cM-Flat" onclick="setComm('Flat')">$</div>
+              </div>
+            </div>
+            <div id="cPct"><div class="frow"><label>Commission %</label>
+              <select id="commPct" onchange="liveCalc()">
+                <option value="0.03">3%</option><option value="0.05" selected>5%</option>
+                <option value="0.07">7%</option><option value="0.10">10%</option>
+              </select></div>
+            </div>
+            <div id="cFlat" style="display:none;"><div class="frow"><label>Commission $</label>
+              <input type="number" id="commFlat" value="0" min="0" oninput="liveCalc()"/></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end form-side -->
+
+  <!-- DRAG HANDLE -->
+  <div class="resizer" id="resizer" title="Drag to resize"></div>
+
+  <!-- ══ OUTPUT SIDE ══ -->
+  <div class="output-side" id="outputSide">
+    <div class="empty" id="emptyMsg">
+      <div class="empty-icon">📋</div>
+      <p>Add segments to generate<br>a live quote</p>
+    </div>
+    <div id="quoteOut" style="display:none;"></div>
+  </div>
+
+</div><!-- end main -->
+
+<div id="printContainer"></div>
+
+<script>
+const S={
+  Waste_Pct:0.10,LEDs_Per_Foot:1.5,LEDs_Per_Injection_Group:50,
+  Capacity_Feet_Per_Box:200,T_Cost:3.11,Jump2_Cost:1.02,Jump5_Cost:1.84,Jump10_Cost:3.10,
+  Wire14_2_Cost_Per_Ft:0.35,Inject_Slack_Ft:1.5,
+  Brain_Controller_Cost:152,PowerOnly_Box_Cost:112,Bag50LED_Cost:86,
+  Labor_Cost_Per_Hour:40,Feet_Per_Hour_Crew:25,Min_Labor_Hours:0,
+  Minutes_Per_Jump:8,Schedule_Buffer_Pct:0.10,
+  Track_Piece_Length_ft:6.5,Track_Piece_Cost:8,
+  Shipping_Cost:250,Sales_Tax_Rate:0.0825,
+  Crew_Eff:{1:0.65,2:1.00,3:1.30,4:1.55,5:1.70,6:1.85},
+  Diff_Mult:{Easy:1.10,Normal:1.00,Hard:0.85},
+};
+const AREAS=['Front','Back','Left','Right','Patio','Porch','Garage','Gazebo','Other'];
+let st={diff:'Normal',margin:'Preset',buf:'Pct',dis:'None',comm:'Pct'};
+let segN=0,jLog=[],jId=0,R={};
+
+window.onload=()=>{
+  setDiff('Normal');
+  addSeg();
+  document.getElementById('jdist').addEventListener('keydown',e=>{if(e.key==='Enter')addJump();});
+};
+
+// ── RESIZER ──
+(function(){
+  const resizer = document.getElementById('resizer');
+  const formSide = document.querySelector('.form-side');
+  const main = document.querySelector('.main');
+  let isDown = false, startX = 0, startW = 0;
+
+  resizer.addEventListener('mousedown', e => {
+    isDown = true;
+    startX = e.clientX;
+    startW = formSide.offsetWidth;
+    resizer.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mousemove', e => {
+    if(!isDown) return;
+    const dx = e.clientX - startX;
+    const newW = Math.max(300, Math.min(startW + dx, main.offsetWidth - 280));
+    formSide.style.width = newW + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if(!isDown) return;
+    isDown = false;
+    resizer.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+})();
+
+// ── SEGMENTS ──
+function addSeg(){
+  segN++;const id=segN;
+  const tr=document.createElement('tr');
+  tr.id='seg-'+id;
+  tr.innerHTML='<td style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);">'+id+'</td>'
+    +'<td><select id="sa-'+id+'" onchange="liveCalc()" style="width:100%;background:transparent;border:1px solid transparent;border-radius:3px;color:var(--text-bright);font-family:var(--font);font-size:13px;padding:5px 8px;outline:none;">'
+    +AREAS.map(a=>'<option style="background:#1a2332;color:#e8f0f8;">'+a+'</option>').join('')+'</select></td>'
+    +'<td><input type="number" id="sf-'+id+'" placeholder="0" min="0" oninput="liveCalc()" style="width:100%;background:transparent;border:1px solid transparent;border-radius:3px;color:var(--text-bright);font-family:var(--mono);font-size:13px;padding:5px 8px;outline:none;"/></td>'
+    +'<td><span class="seg-del" onclick="delSeg('+id+')" title="Remove">×</span></td>';
+  document.getElementById('segBody').appendChild(tr);
+}
+function delSeg(id){const el=document.getElementById('seg-'+id);if(el)el.remove();liveCalc();}
+function getSegs(){
+  const s=[];
+  for(let i=1;i<=segN;i++){
+    const el=document.getElementById('seg-'+i);if(!el)continue;
+    const ft=parseFloat(document.getElementById('sf-'+i).value)||0;
+    const ar=document.getElementById('sa-'+i).value;
+    if(ft>0)s.push({area:ar,feet:ft});
+  }
+  return s;
+}
+
+// ── JUMPS ──
+function wires(d){let r=d;const w10=Math.floor(r/10);r%=10;const w5=Math.floor(r/5);r%=5;const w2=r>0?Math.ceil(r/2):0;return{w10,w5,w2};}
+function addJump(){
+  const inp=document.getElementById('jdist');
+  const d=parseFloat(inp.value);if(!d||d<=0){inp.focus();return;}
+  jId++;jLog.push({id:jId,dist:d,w:wires(d)});inp.value='';inp.focus();
+  renderJumps();liveCalc();
+}
+function delJump(id){jLog=jLog.filter(j=>j.id!==id);renderJumps();liveCalc();}
+function renderJumps(){
+  const jc=jCounts();
+  document.getElementById('t10').textContent='10ft: '+jc.j10;
+  document.getElementById('t5').textContent='5ft: '+jc.j5;
+  document.getElementById('t2').textContent='2ft: '+jc.j2;
+  const tbl=document.getElementById('jList');
+  if(!jLog.length){tbl.innerHTML='<tr><td colspan="3" style="color:var(--muted);font-style:italic;padding:8px 0;">No jumps logged yet</td></tr>';return;}
+  tbl.innerHTML=jLog.map(j=>{
+    const tags=(j.w.w10?'<span class="wtag w10">'+j.w.w10+'×10ft</span>':'')+(j.w.w5?'<span class="wtag w5">'+j.w.w5+'×5ft</span>':'')+(j.w.w2?'<span class="wtag w2">'+j.w.w2+'×2ft</span>':'');
+    return '<tr><td style="color:var(--muted);">'+j.dist+'ft gap</td><td>'+tags+'</td><td style="text-align:right;"><span class="j-del" onclick="delJump('+j.id+')">×</span></td></tr>';
+  }).join('');
+}
+function jCounts(){let j2=0,j5=0,j10=0;jLog.forEach(j=>{j2+=j.w.w2;j5+=j.w.w5;j10+=j.w.w10;});return{j2,j5,j10,total:jLog.length};}
+
+// ── MODES ──
+function setDiff(d){
+  st.diff=d;
+  ['Easy','Normal','Hard'].forEach(x=>{
+    const el=document.getElementById('pill-'+x);
+    el.className='diff-btn'+(x===d?' '+x.toLowerCase():'');
+  });
+  liveCalc();
+}
+function setM(m){
+  st.margin=m;
+  ['Preset','Custom'].forEach(x=>document.getElementById('mM-'+x).className='mode-tab'+(x===m?' on':''));
+  document.getElementById('mPreset').style.display=m==='Preset'?'':'none';
+  document.getElementById('mCustom').style.display=m==='Custom'?'':'none';
+  liveCalc();
+}
+function setBuf(m){
+  st.buf=m;
+  ['Pct','Flat'].forEach(x=>document.getElementById('bM-'+x).className='mode-tab'+(x===m?' on':''));
+  document.getElementById('bPct').style.display=m==='Pct'?'':'none';
+  document.getElementById('bFlat').style.display=m==='Flat'?'':'none';
+  liveCalc();
+}
+function setDis(m){
+  st.dis=m;
+  ['None','Pct','Flat'].forEach(x=>document.getElementById('dM-'+x).className='mode-tab'+(x===m?' on':''));
+  document.getElementById('dNone').style.display=m==='None'?'':'none';
+  document.getElementById('dPct').style.display=m==='Pct'?'':'none';
+  document.getElementById('dFlat').style.display=m==='Flat'?'':'none';
+  liveCalc();
+}
+function setComm(m){
+  st.comm=m;
+  ['Pct','Flat'].forEach(x=>document.getElementById('cM-'+x).className='mode-tab'+(x===m?' on':''));
+  document.getElementById('cPct').style.display=m==='Pct'?'':'none';
+  document.getElementById('cFlat').style.display=m==='Flat'?'':'none';
+  liveCalc();
+}
+
+// ── CALC ──
+function liveCalc(){
+  const segs=getSegs();
+  if(!segs.length){
+    document.getElementById('emptyMsg').style.display='flex';
+    document.getElementById('quoteOut').style.display='none';
+    ['s-final','s-cost','s-profit'].forEach(id=>document.getElementById(id).textContent='$0.00');
+    document.getElementById('s-margin').textContent='—';
+    return;
+  }
+  calc();
+  renderOut();
+  document.getElementById('emptyMsg').style.display='none';
+  document.getElementById('quoteOut').style.display='block';
+  const qn=document.getElementById('hcpQuoteNum').value;
+  document.getElementById('quoteChip').textContent=qn?'QUOTE #'+qn:'QUOTE #—';
+  const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const pct=n=>(n*100).toFixed(1)+'%';
+  document.getElementById('s-final').textContent=fmt(R.finalPrice);
+  document.getElementById('s-cost').textContent=fmt(R.totalCost);
+  document.getElementById('s-profit').textContent=fmt(R.grossProfit);
+  document.getElementById('s-margin').textContent=pct(R.actualMargin);
+}
+
+function calc(){
+  const segs=getSegs();
+  const crewSize=parseInt(document.getElementById('crewSize').value);
+  const workHoursDay=parseFloat(document.getElementById('workHoursDay').value)||10;
+  const difficulty=st.diff;
+  const targetMargin=st.margin==='Preset'?parseFloat(document.getElementById('marginPreset').value):(parseFloat(document.getElementById('marginCustom').value)||35)/100;
+  const bufMode=st.buf;
+  const miscBufPct=parseFloat(document.getElementById('miscBufferPct').value)||0;
+  const miscBufFlat=parseFloat(document.getElementById('miscBufferFlat').value)||0;
+  const disMode=st.dis;
+  const disPct=(parseFloat(document.getElementById('discountPct').value)||0)/100;
+  const disFlat=parseFloat(document.getElementById('discountFlat').value)||0;
+  const commMode=st.comm;
+  const commPct=parseFloat(document.getElementById('commPct').value)||0.05;
+  const commFlat=parseFloat(document.getElementById('commFlat').value)||0;
+  const homerunFt=parseFloat(document.getElementById('homerunFt').value)||0;
+
+  const measuredFeet=segs.reduce((s,x)=>s+x.feet,0);
+  const billableFeet=measuredFeet*(1+S.Waste_Pct);
+  const totalLEDs=measuredFeet*S.LEDs_Per_Foot;
+  const bags50LED=Math.ceil(totalLEDs/S.LEDs_Per_Injection_Group);
+  const trackPieces=Math.floor(billableFeet/S.Track_Piece_Length_ft);
+  const trackCost=trackPieces*S.Track_Piece_Cost;
+  const brainControllers=1;
+  const powerOnlyBoxes=Math.max(0,Math.ceil(measuredFeet/S.Capacity_Feet_Per_Box)-1);
+  const jc=jCounts();
+  const jump2=jc.j2,jump5=jc.j5,jump10=jc.j10,totalJumps=jc.total;
+  const jumpCost=jump2*S.Jump2_Cost+jump5*S.Jump5_Cost+jump10*S.Jump10_Cost;
+  const ftPerInj=S.LEDs_Per_Injection_Group/S.LEDs_Per_Foot;
+  const tConn=Math.floor(measuredFeet/ftPerInj);
+  const tCost=tConn*S.T_Cost;
+  const wire14Inj=tConn*(ftPerInj+S.Inject_Slack_Ft);
+  const wire14Total=Math.round(homerunFt+wire14Inj);
+  const wire14Cost=wire14Inj*S.Wire14_2_Cost_Per_Ft;
+  const lightCost=bags50LED*S.Bag50LED_Cost;
+  const ctrlCost=brainControllers*S.Brain_Controller_Cost;
+  const pwrCost=powerOnlyBoxes*S.PowerOnly_Box_Cost;
+  const preMisc=lightCost+trackCost+jumpCost+tCost+wire14Cost+ctrlCost+pwrCost;
+  const miscBuf=bufMode==='Pct'?preMisc*miscBufPct:miscBufFlat;
+  const matCost=preMisc+miscBuf+S.Shipping_Cost;
+  const crewEff=S.Crew_Eff[crewSize]||1;
+  const diffMult=S.Diff_Mult[difficulty]||1;
+  const effFtHr=S.Feet_Per_Hour_Crew*crewEff*diffMult;
+  const lhBase=measuredFeet/Math.max(effFtHr,0.01);
+  const lhBuf=lhBase*(1+S.Schedule_Buffer_Pct);
+  const lhJump=totalJumps*S.Minutes_Per_Jump/60;
+  const lhTotal=lhBuf+lhJump;
+  const laborCost=Math.max(S.Min_Labor_Hours,lhTotal)*S.Labor_Cost_Per_Hour*crewSize;
+  const totalCost=matCost+laborCost;
+  const crewDays=lhTotal/workHoursDay;
+  const schedDays=Math.ceil(crewDays);
+  const basePrice=totalCost/(1-targetMargin);
+  let commAmt=commMode==='Pct'?basePrice*commPct:commFlat;
+  const floorP=(totalCost+commAmt)/(1-targetMargin);
+  let disAmt=0,grossP=floorP;
+  if(disMode==='Pct'&&disPct>0){grossP=floorP/(1-disPct);disAmt=grossP-floorP;}
+  else if(disMode==='Flat'&&disFlat>0){grossP=floorP+disFlat;disAmt=disFlat;}
+  const netP=grossP-disAmt;
+  const grossProfit=netP-totalCost-commAmt;
+  const actualMargin=netP>0?grossProfit/netP:0;
+  const taxAmt=netP*S.Sales_Tax_Rate;
+  const finalPrice=netP+taxAmt;
+  const hcpMat=lightCost+tCost+jumpCost+miscBuf+trackCost+wire14Cost;
+  const hcpTotal=hcpMat+laborCost+commAmt;
+  const hcpUnit=measuredFeet>0?hcpTotal/measuredFeet:0;
+  const HCP_MC=300,HCP_MP=200,HCP_MS=250;
+  const disFactor=disMode==='Pct'?(1-disPct):1;
+  const needSub=finalPrice/(disFactor*(1+S.Sales_Tax_Rate));
+  const fixMin=(HCP_MC*brainControllers)+(HCP_MP*powerOnlyBoxes)+HCP_MS;
+  const pfNeed=measuredFeet>0?(needSub-fixMin)/measuredFeet:0;
+  const hcpPF=Math.ceil(pfNeed*2)/2;
+  const pfSub=hcpPF*measuredFeet;
+  const surp=pfSub+fixMin-needSub;
+  const fw={c:brainControllers>0?1:0,p:powerOnlyBoxes>0?1:0,s:1};
+  const tw=fw.c+fw.p+fw.s;
+  let hcpCS=HCP_MC*brainControllers,hcpPS=HCP_MP*powerOnlyBoxes,hcpSS=HCP_MS;
+  if(surp!==0&&tw>0){
+    hcpCS=Math.max(HCP_MC*brainControllers,hcpCS-(surp*(fw.c/tw)));
+    hcpPS=powerOnlyBoxes>0?Math.max(HCP_MP*powerOnlyBoxes,hcpPS-(surp*(fw.p/tw))):0;
+    hcpSS=Math.max(HCP_MS,hcpSS-(surp*(fw.s/tw)));
+  }
+  const hcpSub=pfSub+hcpCS+hcpPS+hcpSS;
+  const hcpDisAmt=disMode==='Pct'?hcpSub*disPct:disMode==='Flat'?disFlat:0;
+  const hcpAD=hcpSub-hcpDisAmt;
+  const hcpFinal=hcpAD*(1+S.Sales_Tax_Rate);
+  const areaBD={};segs.forEach(s=>{areaBD[s.area]=(areaBD[s.area]||0)+s.feet;});
+
+  R={
+    customerName:document.getElementById('customerName').value||'—',
+    customerAddress:document.getElementById('customerAddress').value||'—',
+    customerCityZip:document.getElementById('customerCityZip').value||'—',
+    salesMan:document.getElementById('salesMan').value||'—',
+    hcpQuoteNum:document.getElementById('hcpQuoteNum').value||'—',
+    difficulty,crewSize,workHoursDay,
+    trackStyle:document.getElementById('trackStyle').value,
+    trackColor:document.getElementById('trackColor').value,
+    measuredFeet,billableFeet,bags50LED,trackPieces,trackCost,
+    brainControllers,powerOnlyBoxes,tConn,jump2,jump5,jump10,totalJumps,
+    wire14Total,wire14Cost,homerunFt,
+    lightCost,jumpCost,tCost,ctrlCost,pwrCost,
+    miscBuf,matCost,laborCost,totalCost,
+    lhTotal,crewDays,schedDays,
+    recommendedPrice:grossP,disAmt,disMode,disPct,netP,
+    commAmt,taxAmt,finalPrice,grossProfit,actualMargin,targetMargin,
+    hcpUnit,hcpPF,hcpCS,hcpPS,hcpSS,hcpSub,hcpDisAmt,hcpAD,hcpFinal,areaBD,segs
+  };
+}
+
+function renderOut(){
+  const q=R;
+  const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const pct=n=>(n*100).toFixed(1)+'%';
+  let aRows='';
+  AREAS.forEach(a=>{const ft=q.areaBD[a]||0;if(ft>0)aRows+='<div class="out-row"><span class="olbl">'+a+'</span><span class="oval">'+ft.toFixed(1)+' ft</span></div>';});
+  const dRow=q.disAmt>0?'<div class="out-row"><span class="olbl">Discount</span><span class="oval red">-'+fmt(q.disAmt)+'</span></div>':'';
+  const pBadge=q.powerOnlyBoxes>0?'<div class="out-row"><span class="olbl">Power Injection Boxes</span><span class="obadge">'+q.powerOnlyBoxes+'</span></div>':'';
+  const pHcp=q.powerOnlyBoxes>0?'<div class="hcp-row"><span class="hlbl">Power Supply ×'+q.powerOnlyBoxes+'</span><span class="hval">'+fmt(q.hcpPS)+'</span></div>':'';
+  const dHcp=q.disAmt>0?'<div class="hcp-row"><span class="hlbl">Discount</span><span class="hval" style="color:var(--red);">'+(q.disMode==='Pct'?(q.disPct*100).toFixed(0)+'%':fmt(q.disAmt))+'</span></div>':'';
+  const j10=q.jump10?'<div class="out-row"><span class="olbl">Jump Wires 10ft</span><span class="obadge">'+q.jump10+'</span></div>':'';
+  const j5=q.jump5?'<div class="out-row"><span class="olbl">Jump Wires 5ft</span><span class="obadge">'+q.jump5+'</span></div>':'';
+  const j2=q.jump2?'<div class="out-row"><span class="olbl">Jump Wires 2ft</span><span class="obadge">'+q.jump2+'</span></div>':'';
+
+  document.getElementById('quoteOut').innerHTML=
+
+  // PRICE HERO
+  '<div class="price-hero">'
+  +'<div class="price-customer">Quote prepared for</div>'
+  +'<div class="price-name">'+q.customerName+'</div>'
+  +'<div class="price-label">Total Installed Price</div>'
+  +'<div class="price-amount">'+fmt(q.finalPrice)+'</div>'
+  +'<div class="price-sub">Includes tax &nbsp;·&nbsp; Quote #'+q.hcpQuoteNum+'</div>'
+  +'</div>'
+
+  // STATS
+  +'<div class="out-stats">'
+  +'<div class="stat-cell"><div class="stat-lbl">Measured Ft</div><div class="stat-val acc">'+q.measuredFeet.toFixed(0)+'</div></div>'
+  +'<div class="stat-cell"><div class="stat-lbl">Crew Days</div><div class="stat-val">'+q.crewDays.toFixed(2)+'</div></div>'
+  +'<div class="stat-cell"><div class="stat-lbl">Margin</div><div class="stat-val grn">'+pct(q.actualMargin)+'</div></div>'
+  +'</div>'
+
+  // PARTS
+  +'<div class="out-section">'
+  +'<div class="out-section-head"><span>Parts List</span><span style="font-size:11px;color:var(--muted);">'+q.trackStyle+' — '+q.trackColor+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Brain Controllers</span><span class="obadge">'+q.brainControllers+'</span></div>'
+  +pBadge
+  +'<div class="out-row"><span class="olbl">Bags of Lights (50 LEDs)</span><span class="obadge">'+q.bags50LED+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Track Pieces (6.5ft)</span><span class="obadge">'+q.trackPieces+'</span></div>'
+  +'<div class="out-row"><span class="olbl">T Connectors</span><span class="obadge">'+q.tConn+'</span></div>'
+  +j10+j5+j2
+  +'<div class="out-row"><span class="olbl">14/2 Wire</span><span class="obadge">'+q.wire14Total+' ft</span></div>'
+  +(aRows?'<div class="out-section-head" style="background:transparent;color:var(--muted);font-size:10px;">Feet by Area</div>'+aRows:'')
+  +'</div>'
+
+  // COSTS
+  +'<div class="out-section">'
+  +'<div class="out-section-head">Cost Breakdown</div>'
+  +'<div class="out-row"><span class="olbl">Lights &amp; LEDs</span><span class="oval">'+fmt(q.lightCost)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Track</span><span class="oval">'+fmt(q.trackCost)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Jumps &amp; T Connectors</span><span class="oval">'+fmt(q.jumpCost+q.tCost)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Wire 14/2</span><span class="oval">'+fmt(q.wire14Cost)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Controllers</span><span class="oval">'+fmt(q.ctrlCost+q.pwrCost)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Misc Buffer</span><span class="oval">'+fmt(q.miscBuf)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Shipping</span><span class="oval">'+fmt(S.Shipping_Cost)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Labor ('+q.lhTotal.toFixed(2)+' hrs)</span><span class="oval">'+fmt(q.laborCost)+'</span></div>'
+  +'<div class="out-row total"><span class="olbl">Total Cost</span><span class="oval grn">'+fmt(q.totalCost)+'</span></div>'
+  +'</div>'
+
+  // PRICING
+  +'<div class="out-section">'
+  +'<div class="out-section-head">Pricing Summary</div>'
+  +'<div class="out-row"><span class="olbl">Base Price ('+pct(q.targetMargin)+')</span><span class="oval">'+fmt(q.recommendedPrice)+'</span></div>'
+  +dRow
+  +'<div class="out-row"><span class="olbl">Sales Tax (8.25%)</span><span class="oval">'+fmt(q.taxAmt)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Commission Pay</span><span class="oval">'+fmt(q.commAmt)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Gross Profit</span><span class="oval grn">'+fmt(q.grossProfit)+'</span></div>'
+  +'<div class="out-row total-dark"><span class="olbl" style="color:#8aaabb;">Final Price</span><span class="oval acc" style="font-size:16px;">'+fmt(q.finalPrice)+'</span></div>'
+  +'</div>'
+
+  // HCP
+  +'<div class="hcp-block">'
+  +'<div class="out-section-head">HouseCall Pro — Enter These Numbers</div>'
+  +'<div class="hcp-unit-row">'
+  +'<div><div class="hcp-ulabel">Project Area — Unit Sell Price (per ft)</div><div class="hcp-usub">× '+q.measuredFeet.toFixed(0)+' ft = '+fmt(q.hcpPF*q.measuredFeet)+'</div></div>'
+  +'<div class="hcp-uprice">'+fmt(q.hcpPF)+'</div>'
+  +'</div>'
+  +'<div class="hcp-row"><span class="hlbl">Brain Controller ×'+q.brainControllers+'</span><span class="hval">'+fmt(q.hcpCS)+'</span></div>'
+  +pHcp
+  +'<div class="hcp-row"><span class="hlbl">Shipping &amp; Misc</span><span class="hval">'+fmt(q.hcpSS)+'</span></div>'
+  +'<div class="hcp-row"><span class="hlbl">Unit Cost (per ft) — internal</span><span class="hval internal">'+fmt(q.hcpUnit)+'</span></div>'
+  +dHcp
+  +'<div class="hcp-row"><span class="hlbl">Subtotal</span><span class="hval">'+fmt(q.hcpSub)+'</span></div>'
+  +(q.hcpDisAmt>0?'<div class="hcp-row"><span class="hlbl">After Discount</span><span class="hval">'+fmt(q.hcpAD)+'</span></div>':'')
+  +'<div class="hcp-row"><span class="hlbl">Tax (8.25%)</span><span class="hval">'+fmt(q.hcpAD*S.Sales_Tax_Rate)+'</span></div>'
+  +'<div class="hcp-total"><div class="htlbl">HCP Final Total</div><div class="htval">'+fmt(q.hcpFinal)+'</div></div>'
+  +'</div>'
+  +'<div class="margin-ok">✓ '+pct(q.targetMargin)+' margin floor protected &nbsp;·&nbsp; Actual: '+pct(q.actualMargin)+'</div>';
+}
+
+// ── PRINT ──
+function printQuote(){
+  if(!R.finalPrice){alert('Complete a quote first.');return;}
+  const q=R;const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');const pct=n=>(n*100).toFixed(1)+'%';
+  var aRows='';AREAS.forEach(function(a){var ft=q.areaBD[a]||0;if(ft>0)aRows+='<tr><td>'+a+'</td><td style="text-align:right">'+ft.toFixed(1)+' ft</td></tr>';});
+  var jRows='';if(q.jump10)jRows+='<tr><td>Jump Wires 10ft</td><td style="text-align:right">'+q.jump10+'</td></tr>';if(q.jump5)jRows+='<tr><td>Jump Wires 5ft</td><td style="text-align:right">'+q.jump5+'</td></tr>';if(q.jump2)jRows+='<tr><td>Jump Wires 2ft</td><td style="text-align:right">'+q.jump2+'</td></tr>';
+  var dRow=q.disAmt>0?'<tr><td>Discount</td><td style="text-align:right">-'+fmt(q.disAmt)+'</td></tr>':'';
+  var pRow=q.powerOnlyBoxes>0?'<tr><td>Power Injection Boxes</td><td style="text-align:right">'+q.powerOnlyBoxes+'</td></tr>':'';
+  var pHcp=q.powerOnlyBoxes>0?'<tr><td>Power Supply x'+q.powerOnlyBoxes+'</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpPS)+'</td></tr>':'';
+  var dHcp=q.disAmt>0?'<tr><td>Discount</td><td style="text-align:right;font-weight:700;">'+(q.disMode==='Pct'?(q.disPct*100).toFixed(0)+'%':fmt(q.disAmt))+'</td></tr>':'';
+  var aSec=aRows?'<p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #111;padding-bottom:3px;margin:10px 0 6px;">Feet by Area</p><table style="width:100%;border-collapse:collapse;">'+aRows+'</table>':'';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Quote #'+q.hcpQuoteNum+'</title>'
+  +'<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;font-size:12px;color:#111;background:white;padding:20px;max-width:740px;margin:0 auto;}'
+  +'.hdr{display:flex;justify-content:space-between;border-bottom:3px solid #111;padding-bottom:10px;margin-bottom:12px;}'
+  +'.cust{background:#f5f5f5;padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;}'
+  +'.banner{border:2px solid #111;padding:10px;text-align:center;margin-bottom:12px;}'
+  +'.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;}'
+  +'.st{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-bottom:1.5px solid #111;padding-bottom:3px;margin-bottom:6px;}'
+  +'table{width:100%;border-collapse:collapse;}td{padding:3px 0;border-bottom:1px solid #eee;font-size:11px;}'
+  +'.tr td{font-weight:700;border-top:2px solid #111;border-bottom:none;padding-top:5px;}'
+  +'.hb{border:1.5px solid #111;padding:10px 12px;}.ht{display:flex;justify-content:space-between;padding-top:8px;border-top:2px solid #111;margin-top:4px;}'
+  +'.ft{border-top:1px solid #ccc;padding-top:8px;margin-top:12px;font-size:10px;color:#777;text-align:center;}'
+  +'@media print{@page{margin:12mm;size:letter;}}</style></head><body>'
+  +'<div class="hdr"><div><span style="font-size:22px;font-weight:900;letter-spacing:2px;">NEX</span><span style="font-size:22px;font-weight:900;letter-spacing:2px;color:#555;">WAVE</span>'
+  +'<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#777;margin-top:2px;">Lighting — Bosso Quote</div></div>'
+  +'<div style="text-align:right;"><div style="font-size:9px;color:#777;text-transform:uppercase;letter-spacing:1px;">Quote Number</div>'
+  +'<div style="font-size:20px;font-weight:700;">#'+q.hcpQuoteNum+'</div>'
+  +'<div style="font-size:10px;color:#777;">'+new Date().toLocaleDateString()+'</div></div></div>'
+  +'<div class="cust"><div><div style="font-size:9px;text-transform:uppercase;color:#777;">Customer</div><div style="font-weight:600;">'+q.customerName+'</div></div>'
+  +'<div><div style="font-size:9px;text-transform:uppercase;color:#777;">Salesman</div><div style="font-weight:600;">'+q.salesMan+'</div></div>'
+  +'<div><div style="font-size:9px;text-transform:uppercase;color:#777;">Address</div><div style="font-weight:600;">'+q.customerAddress+'</div></div>'
+  +'<div><div style="font-size:9px;text-transform:uppercase;color:#777;">City / Zip</div><div style="font-weight:600;">'+q.customerCityZip+'</div></div></div>'
+  +'<div class="banner"><div style="font-size:10px;text-transform:uppercase;color:#555;">Total Installed Price (includes tax)</div>'
+  +'<div style="font-size:30px;font-weight:900;">'+fmt(q.finalPrice)+'</div>'
+  +'<div style="font-size:10px;color:#777;margin-top:2px;">'+q.difficulty+' &nbsp;|&nbsp; '+q.measuredFeet.toFixed(0)+' ft &nbsp;|&nbsp; '+q.schedDays+' day'+(q.schedDays!==1?'s':'')+' &nbsp;|&nbsp; '+q.trackStyle+' — '+q.trackColor+'</div></div>'
+  +'<div class="two"><div><div class="st">Parts List</div><table>'
+  +'<tr><td>Brain Controllers</td><td style="text-align:right">'+q.brainControllers+'</td></tr>'
+  +pRow+'<tr><td>Bags of Lights (50 LEDs)</td><td style="text-align:right">'+q.bags50LED+'</td></tr>'
+  +'<tr><td>Track Pieces (6.5ft)</td><td style="text-align:right">'+q.trackPieces+'</td></tr>'
+  +'<tr><td>T Connectors</td><td style="text-align:right">'+q.tConn+'</td></tr>'
+  +jRows+'<tr><td>14/2 Wire</td><td style="text-align:right">'+q.wire14Total+' ft</td></tr>'
+  +'</table>'+aSec+'</div>'
+  +'<div><div class="st">Cost Breakdown</div><table>'
+  +'<tr><td>Lights &amp; LEDs</td><td style="text-align:right">'+fmt(q.lightCost)+'</td></tr>'
+  +'<tr><td>Track</td><td style="text-align:right">'+fmt(q.trackCost)+'</td></tr>'
+  +'<tr><td>Jumps &amp; T Connectors</td><td style="text-align:right">'+fmt(q.jumpCost+q.tCost)+'</td></tr>'
+  +'<tr><td>Wire 14/2</td><td style="text-align:right">'+fmt(q.wire14Cost)+'</td></tr>'
+  +'<tr><td>Controllers</td><td style="text-align:right">'+fmt(q.ctrlCost+q.pwrCost)+'</td></tr>'
+  +'<tr><td>Shipping</td><td style="text-align:right">'+fmt(S.Shipping_Cost)+'</td></tr>'
+  +'<tr><td>Labor ('+q.lhTotal.toFixed(2)+' hrs)</td><td style="text-align:right">'+fmt(q.laborCost)+'</td></tr>'
+  +'<tr class="tr"><td>Total Cost</td><td style="text-align:right">'+fmt(q.totalCost)+'</td></tr>'
+  +'</table><div class="st" style="margin-top:10px;">Pricing Summary</div><table>'
+  +'<tr><td>Base Price ('+pct(q.targetMargin)+')</td><td style="text-align:right">'+fmt(q.recommendedPrice)+'</td></tr>'
+  +dRow+'<tr><td>Sales Tax (8.25%)</td><td style="text-align:right">'+fmt(q.taxAmt)+'</td></tr>'
+  +'<tr><td>Commission</td><td style="text-align:right">'+fmt(q.commAmt)+'</td></tr>'
+  +'<tr><td>Gross Profit</td><td style="text-align:right">'+fmt(q.grossProfit)+'</td></tr>'
+  +'<tr class="tr"><td>Final Price</td><td style="text-align:right">'+fmt(q.finalPrice)+'</td></tr>'
+  +'</table></div></div>'
+  +'<div class="hb"><div class="st" style="margin-bottom:8px;">HouseCall Pro — Enter These Numbers</div>'
+  +'<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:2px solid #111;margin-bottom:8px;">'
+  +'<div><div style="font-size:11px;color:#555;">Project Area — Unit Sell Price (per ft)</div>'
+  +'<div style="font-size:10px;color:#999;">x '+q.measuredFeet.toFixed(0)+' ft = '+fmt(q.hcpPF*q.measuredFeet)+'</div></div>'
+  +'<div style="font-size:26px;font-weight:900;">'+fmt(q.hcpPF)+'</div></div><table>'
+  +'<tr><td>Brain Controller x'+q.brainControllers+'</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpCS)+'</td></tr>'
+  +pHcp+'<tr><td>Shipping &amp; Misc</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpSS)+'</td></tr>'
+  +'<tr><td style="color:#777;">Unit Cost (per ft) — internal</td><td style="text-align:right;color:#777;">'+fmt(q.hcpUnit)+'</td></tr>'
+  +dHcp+'</table>'
+  +'<div class="ht"><div style="font-weight:700;">HCP Final Total</div><div style="font-size:20px;font-weight:900;">'+fmt(q.hcpFinal)+'</div></div>'
+  +'<div style="text-align:right;margin-top:6px;font-size:10px;">Margin: '+pct(q.actualMargin)+' &nbsp;|&nbsp; Crew Days: '+q.crewDays.toFixed(2)+'</div>'
+  +'</div><div class="ft">NexWave Lighting — Bosso Quote &nbsp;|&nbsp; '+new Date().toLocaleDateString()+' &nbsp;|&nbsp; Internal use only</div>'
+  +'<script>window.onload=function(){window.print();}<\/script></body></html>';
+  var blob=new Blob([html],{type:'text/html'});window.open(URL.createObjectURL(blob),'_blank');
+}
+
+// ── RESET ──
+function resetAll(){
+  if(!confirm('Start a new quote?'))return;
+  ['customerName','customerAddress','customerCityZip','salesMan','hcpQuoteNum'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('homerunFt').value='30';
+  document.getElementById('crewSize').value='2';
+  document.getElementById('workHoursDay').value='10';
+  document.getElementById('segBody').innerHTML='';
+  segN=0;jLog=[];jId=0;renderJumps();
+  setDiff('Normal');setM('Preset');setBuf('Pct');setDis('None');setComm('Pct');
+  addSeg();R={};
+  document.getElementById('quoteChip').textContent='QUOTE #—';
+  document.getElementById('emptyMsg').style.display='flex';
+  document.getElementById('quoteOut').style.display='none';
+  ['s-final','s-cost','s-profit'].forEach(id=>document.getElementById(id).textContent='$0.00');
+  document.getElementById('s-margin').textContent='—';
+}
+</script>
+</body>
+</html>
