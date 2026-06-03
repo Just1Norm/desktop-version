@@ -3,47 +3,108 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NexWave Lighting — NexWave Quote</title>
+<title>NexWave Lighting — Bosso Quote</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg: #0d1117;
-  --panel: #141b22;
-  --panel2: #1a2332;
-  --border: #1e2d3d;
-  --border2: #253444;
-  --accent: #1aacac;
-  --accent-dim: rgba(26,172,172,0.12);
-  --accent-border: rgba(26,172,172,0.25);
-  --gold: #d4a017;
-  --gold-dim: rgba(212,160,23,0.12);
-  --green: #1fc87a;
-  --green-dim: rgba(31,200,122,0.10);
-  --red: #e05252;
-  --text: #ccd6e0;
-  --text-bright: #e8f0f8;
-  --muted: #4a6070;
-  --label: #6a8898;
+  --bg: #f0f2f5;
+  --panel: #ffffff;
+  --panel2: #f4f6f9;
+  --border: #dde2ea;
+  --border2: #c8d0da;
+  --accent: #0d8a8a;
+  --accent-dim: rgba(13,138,138,0.10);
+  --accent-border: rgba(13,138,138,0.25);
+  --gold: #b07d10;
+  --gold-dim: rgba(176,125,16,0.10);
+  --green: #177a4a;
+  --green-dim: rgba(23,122,74,0.08);
+  --red: #c0392b;
+  --text: #1a2332;
+  --text-bright: #0d1520;
+  --muted: #7a8fa0;
+  --label: #4a6070;
   --font: 'Barlow', sans-serif;
   --font-cond: 'Barlow Condensed', sans-serif;
   --mono: 'IBM Plex Mono', monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
-body {
+
+/* ── PASSWORD SCREEN ── */
+#lockScreen {
+  position: fixed;
+  inset: 0;
+  background: #0a0f15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  flex-direction: column;
+  gap: 0;
+}
+.lock-box {
+  background: #141b22;
+  border: 1px solid #1e2d3d;
+  border-top: 3px solid #1aacac;
+  border-radius: 8px;
+  padding: 40px 48px;
+  width: 380px;
+  text-align: center;
+}
+.lock-logo { font-family: var(--font-cond); font-size: 28px; font-weight: 700; letter-spacing: 3px; margin-bottom: 4px; }
+.lock-logo .nex { color: #e8f0f8; }
+.lock-logo .wav { color: #1aacac; }
+.lock-sub { font-family: var(--font-cond); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #4a6070; margin-bottom: 28px; }
+.lock-label { font-family: var(--font-cond); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #6a8898; margin-bottom: 8px; text-align: left; }
+.lock-input {
+  width: 100%;
+  background: #1a2332;
+  border: 1px solid #253444;
+  border-radius: 5px;
+  color: #e8f0f8;
+  font-family: var(--font);
+  font-size: 16px;
+  padding: 12px 14px;
+  outline: none;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+}
+.lock-input:focus { border-color: #1aacac; }
+.lock-btn {
+  width: 100%;
+  background: #1aacac;
+  border: none;
+  border-radius: 5px;
+  color: #071212;
+  font-family: var(--font-cond);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.lock-btn:hover { background: #1dc8c8; }
+.lock-err { font-size: 12px; color: #e05252; margin-top: 10px; min-height: 18px; }
+
+body.locked #appWrapper { display: none; }
+body:not(.locked) #lockScreen { display: none; }
+
+#appWrapper {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  font-size: 13px;
+  font-size: 15px;
   min-height: 100vh;
 }
 
 /* ── TOP BAR ── */
 .topbar {
   background: #0a0f15;
-  border-bottom: 2px solid var(--accent);
+  border-bottom: 2px solid #1aacac;
   padding: 0 32px;
-  height: 52px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -51,52 +112,52 @@ body {
   top: 0;
   z-index: 100;
 }
-.brand { display: flex; align-items: center; gap: 12px; }
-.brand-logo { font-family: var(--font-cond); font-size: 22px; font-weight: 700; letter-spacing: 3px; }
-.brand-nex { color: var(--text-bright); }
-.brand-wave { color: var(--accent); }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-logo { font-family: var(--font-cond); font-size: 26px; font-weight: 700; letter-spacing: 3px; }
+.brand-nex { color: #e8f0f8; }
+.brand-wave { color: #1aacac; }
 .brand-tag {
   font-family: var(--font-cond);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--muted);
-  border-left: 1px solid var(--border2);
-  padding-left: 12px;
+  color: #4a6070;
+  border-left: 1px solid #1e2d3d;
+  padding-left: 14px;
 }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
 .quote-chip {
   font-family: var(--mono);
-  font-size: 12px;
-  color: var(--accent);
-  background: var(--accent-dim);
-  border: 1px solid var(--accent-border);
-  padding: 4px 12px;
+  font-size: 13px;
+  color: #1aacac;
+  background: rgba(26,172,172,0.12);
+  border: 1px solid rgba(26,172,172,0.25);
+  padding: 5px 14px;
   border-radius: 4px;
-  min-width: 100px;
+  min-width: 110px;
   text-align: center;
   letter-spacing: 1px;
 }
 .tbtn {
   font-family: var(--font);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 6px 16px;
+  padding: 7px 18px;
   border-radius: 4px;
   cursor: pointer;
-  border: 1px solid var(--border2);
+  border: 1px solid #1e2d3d;
   background: transparent;
-  color: var(--label);
+  color: #6a8898;
   transition: all 0.15s;
   letter-spacing: 0.5px;
 }
-.tbtn:hover { border-color: var(--accent); color: var(--accent); }
+.tbtn:hover { border-color: #1aacac; color: #1aacac; }
 .tbtn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: #1aacac;
+  border-color: #1aacac;
   color: #071212;
-  font-weight: 600;
+  font-weight: 700;
 }
 .tbtn-primary:hover { background: #1dc8c8; color: #071212; }
 
@@ -110,12 +171,12 @@ body {
 }
 .strip-cell {
   background: var(--panel);
-  padding: 12px 24px;
+  padding: 14px 24px;
 }
 .strip-label {
   font-family: var(--font-cond);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--muted);
@@ -123,7 +184,7 @@ body {
 }
 .strip-value {
   font-family: var(--mono);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   color: var(--accent);
 }
@@ -210,7 +271,7 @@ body {
 }
 .section-title {
   font-family: var(--font-cond);
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -228,47 +289,49 @@ body {
 .fgrid.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 .fgrid.gA { grid-template-columns: 2fr 1fr; }
 
-.frow { display: flex; flex-direction: column; gap: 4px; }
+.frow { display: flex; flex-direction: column; gap: 5px; }
 .frow label {
   font-family: var(--font-cond);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--muted);
+  color: var(--label);
 }
 .frow input, .frow select, .frow textarea {
-  background: var(--panel2);
-  border: 1px solid var(--border2);
+  background: #ffffff;
+  border: 1.5px solid var(--border2);
   border-radius: 4px;
-  color: var(--text-bright);
+  color: #111111;
   font-family: var(--font);
-  font-size: 13px;
-  padding: 8px 10px;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 12px;
   outline: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   -webkit-appearance: none;
   width: 100%;
 }
 .frow select option {
-  background: #1a2332;
-  color: #e8f0f8;
+  background: #ffffff;
+  color: #111111;
+  font-weight: 500;
 }
 .frow input:focus, .frow select:focus, .frow textarea:focus {
   border-color: var(--accent);
-  background: var(--panel);
+  box-shadow: 0 0 0 3px rgba(13,138,138,0.10);
 }
-.frow input::placeholder { color: var(--muted); }
+.frow input::placeholder { color: #a0b0be; }
 
 /* ── DIFFICULTY ── */
 .diff-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .diff-btn {
-  padding: 8px;
-  border: 1px solid var(--border2);
+  padding: 9px;
+  border: 1.5px solid var(--border2);
   border-radius: 4px;
-  background: var(--panel2);
+  background: #ffffff;
   font-family: var(--font-cond);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -285,21 +348,21 @@ body {
 .mode-tabs { display: flex; border: 1px solid var(--border2); border-radius: 4px; overflow: hidden; }
 .mode-tab {
   flex: 1;
-  padding: 7px 10px;
+  padding: 8px 10px;
   font-family: var(--font-cond);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: var(--muted);
-  background: var(--panel2);
+  background: #ffffff;
   cursor: pointer;
   text-align: center;
   border-right: 1px solid var(--border2);
   transition: all 0.15s;
 }
 .mode-tab:last-child { border-right: none; }
-.mode-tab.on { background: var(--accent); color: #071212; font-weight: 700; }
+.mode-tab.on { background: var(--accent); color: #ffffff; font-weight: 700; }
 
 /* ── SEGMENT TABLE ── */
 .seg-wrap { overflow-x: auto; }
@@ -314,12 +377,12 @@ body {
 }
 .seg-table th {
   font-family: var(--font-cond);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--muted);
-  padding: 6px 10px;
+  padding: 8px 10px;
   text-align: left;
 }
 .seg-table td { padding: 3px 6px; border-bottom: 1px solid var(--border); }
@@ -329,16 +392,16 @@ body {
   background: transparent;
   border: 1px solid transparent;
   border-radius: 3px;
-  color: var(--text-bright);
+  color: #111111;
   font-family: var(--font);
-  font-size: 13px;
+  font-size: 15px;
   padding: 5px 8px;
   outline: none;
   transition: all 0.12s;
 }
 .seg-table select option {
-  background: #1a2332;
-  color: #e8f0f8;
+  background: #ffffff;
+  color: #111111;
 }
 .seg-table input:focus, .seg-table select:focus {
   border-color: var(--accent);
@@ -489,37 +552,37 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 18px;
-  border-bottom: 1px solid rgba(30,45,61,0.5);
-  font-size: 12px;
+  padding: 7px 18px;
+  border-bottom: 1px solid rgba(30,45,61,0.12);
+  font-size: 14px;
 }
 .out-row:last-child { border-bottom: none; }
 .out-row.total {
   background: var(--green-dim);
-  border-top: 1px solid rgba(31,200,122,0.2);
-  font-weight: 600;
-  font-size: 13px;
+  border-top: 1px solid rgba(23,122,74,0.2);
+  font-weight: 700;
+  font-size: 15px;
 }
 .out-row.total-dark {
-  background: var(--panel2);
+  background: #0a0f15;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
 }
-.olbl { color: var(--label); }
-.oval { font-family: var(--mono); font-size: 12px; color: var(--text-bright); }
+.olbl { color: var(--label); font-weight: 500; }
+.oval { font-family: var(--mono); font-size: 14px; color: var(--text-bright); font-weight: 600; }
 .oval.grn { color: var(--green); }
 .oval.acc { color: var(--accent); }
 .oval.red { color: var(--red); }
 .obadge {
   font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   background: var(--accent-dim);
   color: var(--accent);
   border: 1px solid var(--accent-border);
-  padding: 1px 8px;
+  padding: 2px 10px;
   border-radius: 3px;
-  min-width: 32px;
+  min-width: 36px;
   text-align: center;
 }
 
@@ -602,13 +665,28 @@ body {
 }
 </style>
 </head>
-<body>
+<body class="locked">
+
+<!-- PASSWORD SCREEN -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-logo"><span class="nex">NEX</span><span class="wav">WAVE</span></div>
+    <div class="lock-sub">Bosso Quote Tool</div>
+    <div class="lock-label">Enter Password</div>
+    <input type="password" class="lock-input" id="lockInput" placeholder="••••••••" autocomplete="off"/>
+    <button class="lock-btn" onclick="tryUnlock()">UNLOCK</button>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appWrapper">
 
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="brand">
     <div class="brand-logo"><span class="brand-nex">NEX</span><span class="brand-wave">WAVE</span></div>
-    <div class="brand-tag">Bosso Quote Tool</div>
+    <div class="brand-tag">NexWave Quote Tool</div>
   </div>
   <div class="topbar-right">
     <div class="quote-chip" id="quoteChip">QUOTE #—</div>
@@ -657,7 +735,16 @@ body {
         <div class="fgrid g3">
           <div class="frow"><label>Address</label><input type="text" id="customerAddress" placeholder="Street address" oninput="liveCalc()"/></div>
           <div class="frow"><label>City / Zip</label><input type="text" id="customerCityZip" placeholder="City, TX 00000" oninput="liveCalc()"/></div>
-          <div class="frow"><label>Salesman</label><input type="text" id="salesMan" placeholder="Name" oninput="liveCalc()"/></div>
+          <div class="frow"><label>Salesman</label>
+            <select id="salesMan" onchange="liveCalc()">
+              <option value="">— Select —</option>
+              <option>Ben</option>
+              <option>Brad</option>
+              <option>Chris</option>
+              <option>Doug</option>
+              <option>Gabe</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -873,6 +960,8 @@ body {
 
 </div><!-- end main -->
 
+</div><!-- end appWrapper -->
+
 <div id="printContainer"></div>
 
 <script>
@@ -897,6 +986,25 @@ window.onload=()=>{
   addSeg();
   document.getElementById('jdist').addEventListener('keydown',e=>{if(e.key==='Enter')addJump();});
 };
+
+// ── PASSWORD ──
+function tryUnlock() {
+  const input = document.getElementById('lockInput');
+  const err = document.getElementById('lockErr');
+  if(input.value === 'Tucker2023!') {
+    document.body.classList.remove('locked');
+    document.getElementById('lockScreen').style.display = 'none';
+  } else {
+    err.textContent = 'Incorrect password. Please try again.';
+    input.value = '';
+    input.focus();
+    setTimeout(()=>err.textContent='', 3000);
+  }
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  const inp = document.getElementById('lockInput');
+  if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
+});
 
 // ── RESIZER ──
 (function(){
@@ -937,8 +1045,8 @@ function addSeg(){
   tr.id='seg-'+id;
   tr.innerHTML='<td style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);">'+id+'</td>'
     +'<td><select id="sa-'+id+'" onchange="liveCalc()" style="width:100%;background:transparent;border:1px solid transparent;border-radius:3px;color:var(--text-bright);font-family:var(--font);font-size:13px;padding:5px 8px;outline:none;">'
-    +AREAS.map(a=>'<option style="background:#1a2332;color:#e8f0f8;">'+a+'</option>').join('')+'</select></td>'
-    +'<td><input type="number" id="sf-'+id+'" placeholder="0" min="0" oninput="liveCalc()" style="width:100%;background:transparent;border:1px solid transparent;border-radius:3px;color:var(--text-bright);font-family:var(--mono);font-size:13px;padding:5px 8px;outline:none;"/></td>'
+    +AREAS.map(a=>'<option style="background:#ffffff;color:#111111;">'+a+'</option>').join('')+'</select></td>'
+    +'<td><input type="number" id="sf-'+id+'" placeholder="0" min="0" oninput="liveCalc()" style="width:100%;background:transparent;border:1px solid transparent;border-radius:3px;color:#111111;font-family:var(--font);font-size:15px;padding:5px 8px;outline:none;"/></td>'
     +'<td><span class="seg-del" onclick="delSeg('+id+')" title="Remove">×</span></td>';
   document.getElementById('segBody').appendChild(tr);
 }
