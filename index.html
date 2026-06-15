@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NexWave Lighting — Bosso Quote</title>
+<title>NexWave Lighting — Quote Tool</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -27,6 +27,12 @@
   --font: 'Barlow', sans-serif;
   --font-cond: 'Barlow Condensed', sans-serif;
   --mono: 'IBM Plex Mono', monospace;
+}
+/* JellyFish product mode recolors the content accent (NexWave shell stays teal) */
+body.prod-jelly {
+  --accent: #6D28D9;
+  --accent-dim: rgba(109,40,217,0.10);
+  --accent-border: rgba(109,40,217,0.28);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -127,6 +133,23 @@ body:not(.locked) #lockScreen { display: none; }
   padding-left: 14px;
 }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
+.prod-pill {
+  font-family: var(--font-cond);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 4px;
+  color: #1aacac;
+  background: rgba(26,172,172,0.12);
+  border: 1px solid rgba(26,172,172,0.25);
+}
+body.prod-jelly .prod-pill {
+  color: #b794f6;
+  background: rgba(139,92,246,0.14);
+  border-color: rgba(139,92,246,0.3);
+}
 .quote-chip {
   font-family: var(--mono);
   font-size: 13px;
@@ -189,6 +212,7 @@ body:not(.locked) #lockScreen { display: none; }
   color: var(--accent);
 }
 .strip-value.green { color: var(--green); }
+.strip-value.red { color: #c0392b; }
 .strip-value.gold { color: var(--gold); }
 .strip-value.dim { color: var(--muted); }
 
@@ -282,6 +306,40 @@ body:not(.locked) #lockScreen { display: none; }
   background: var(--bg);
 }
 
+/* ── PRODUCT SWITCH ── */
+.prod-switch-wrap { padding: 14px 24px; background: var(--panel); border-bottom: 1px solid var(--border); }
+.prod-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.prod-opt {
+  padding: 12px 14px;
+  border: 1.5px solid var(--border2);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.prod-opt .pn {
+  font-family: var(--font-cond);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.prod-opt .ps {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+.prod-opt.on-teal { border-color: #0d8a8a; background: rgba(13,138,138,0.08); }
+.prod-opt.on-teal .pn { color: #0d8a8a; }
+.prod-opt.on-purple { border-color: #6D28D9; background: rgba(109,40,217,0.08); }
+.prod-opt.on-purple .pn { color: #6D28D9; }
+
 /* ── FORM GRID ── */
 .fgrid { display: grid; gap: 12px; margin-bottom: 12px; }
 .fgrid.g2 { grid-template-columns: 1fr 1fr; }
@@ -319,9 +377,21 @@ body:not(.locked) #lockScreen { display: none; }
 }
 .frow input:focus, .frow select:focus, .frow textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(13,138,138,0.10);
+  box-shadow: 0 0 0 3px var(--accent-dim);
 }
 .frow input::placeholder { color: #a0b0be; }
+
+.spec-sub {
+  font-family: var(--font-cond);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin: 4px 0 10px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border2);
+}
 
 /* ── DIFFICULTY ── */
 .diff-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -456,14 +526,14 @@ body:not(.locked) #lockScreen { display: none; }
   background: var(--accent);
   border: none;
   border-radius: 4px;
-  color: #071212;
+  color: #fff;
   font-family: var(--font-cond);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.5px;
   cursor: pointer;
 }
-.jump-btn:hover { background: #1dc8c8; }
+.jump-btn:hover { filter: brightness(1.1); }
 .tally-row { display: flex; gap: 8px; margin-bottom: 10px; }
 .tally-chip {
   font-family: var(--mono);
@@ -492,6 +562,18 @@ body:not(.locked) #lockScreen { display: none; }
 .w10 { background: rgba(224,82,82,0.12); color: var(--red); }
 .j-del { color: var(--border2); cursor: pointer; font-size: 14px; }
 .j-del:hover { color: var(--red); }
+
+/* ── PLACEHOLDER FLAG ── */
+.flag-warn {
+  background: #FEF3C7;
+  border-left: 3px solid #F59E0B;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 12px;
+  color: #92400E;
+  margin-top: 10px;
+  line-height: 1.4;
+}
 
 /* ── OUTPUT PANEL ── */
 .out-head {
@@ -568,6 +650,7 @@ body:not(.locked) #lockScreen { display: none; }
   font-weight: 700;
   font-size: 16px;
 }
+.out-row.hl { background: var(--accent-dim); }
 .olbl { color: var(--label); font-weight: 500; }
 .oval { font-family: var(--mono); font-size: 14px; color: var(--text-bright); font-weight: 600; }
 .oval.grn { color: var(--green); }
@@ -599,21 +682,21 @@ body:not(.locked) #lockScreen { display: none; }
   background: var(--accent-dim);
   border-bottom: 1px solid var(--accent-border);
 }
-.hcp-ulabel { font-size: 11px; color: var(--accent); }
-.hcp-usub { font-size: 10px; color: var(--muted); margin-top: 1px; }
-.hcp-uprice { font-family: var(--mono); font-size: 34px; font-weight: 600; color: var(--accent); }
+.hcp-ulabel { font-size: 13px; color: var(--accent); }
+.hcp-usub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.hcp-uprice { font-family: var(--mono); font-size: 34px; font-weight: 700; color: var(--text-bright); }
 .hcp-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 18px;
+  padding: 9px 18px;
   border-bottom: 1px solid var(--border);
-  font-size: 12px;
+  font-size: 15px;
 }
 .hcp-row:last-child { border-bottom: none; }
 .hlbl { color: var(--label); }
-.hval { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text-bright); }
-.hval.internal { color: var(--muted); font-weight: 400; }
+.hval { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text-bright); }
+.hval.internal { color: var(--text); font-weight: 600; font-size: 16px; }
 .hcp-total {
   display: flex;
   justify-content: space-between;
@@ -632,6 +715,16 @@ body:not(.locked) #lockScreen { display: none; }
   border-radius: 4px;
   font-size: 11px;
   color: var(--green);
+  text-align: center;
+}
+.margin-warn {
+  margin: 0 18px 12px;
+  padding: 6px 12px;
+  background: rgba(224,82,82,0.10);
+  border: 1px solid rgba(224,82,82,0.25);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--red);
   text-align: center;
 }
 
@@ -655,6 +748,28 @@ body:not(.locked) #lockScreen { display: none; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
+/* ── MOBILE (phones/tablets ≤820px) — desktop view above this width is untouched ── */
+@media (max-width: 820px) {
+  /* stack the two panels into one scrolling column */
+  .main { flex-direction: column; overflow: visible; min-height: 0; }
+  .form-side { width: 100% !important; min-width: 0; overflow: visible; }
+  .output-side { width: 100%; min-width: 0; position: static; top: auto; height: auto; overflow: visible; }
+  .resizer { display: none; }            /* no drag handle on touch */
+
+  /* tighter chrome */
+  .topbar { padding: 0 14px; }
+  .prod-switch-wrap { padding: 12px 14px; }
+  .section { }
+  .summary-strip { grid-template-columns: 1fr 1fr; padding: 12px 14px; }
+
+  /* touch-friendly inputs (16px also stops iOS auto-zoom on focus) */
+  .frow input, .frow select, .frow textarea { font-size: 16px; min-height: 44px; }
+  .fgrid.g4 { grid-template-columns: 1fr 1fr; }   /* 4-up grids → 2-up so they fit */
+
+  /* let wide tables scroll sideways instead of squishing */
+  .out-section table, .seg-wrap, .jump-list { overflow-x: auto; display: block; }
+}
+
 /* PRINT */
 #printContainer { display: none; }
 @media print {
@@ -663,6 +778,36 @@ body:not(.locked) #lockScreen { display: none; }
   #printContainer { display: block !important; }
   @page { margin: 12mm; size: letter; }
 }
+.mini-btn {
+  width: 100%; padding: 11px 12px; border-radius: 10px; cursor: pointer;
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border);
+}
+.mini-btn:hover { background: var(--accent-border); }
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(8,15,25,0.55);
+  z-index: 200; align-items: center; justify-content: center; padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+  width: 100%; max-width: 560px; max-height: 88vh; overflow-y: auto; padding: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal-box h3 { margin: 0 0 4px; font-family: var(--font); font-size: 18px; color: var(--text-bright); }
+.modal-box .msub { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+.zone-row { display: flex; gap: 8px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.zone-row .z-zip { font-family: var(--mono); font-weight: 700; width: 70px; }
+.zone-row .z-min { color: var(--label); flex: 1; }
+.zone-row .z-del { color: #c0392b; cursor: pointer; font-weight: 700; padding: 2px 8px; }
+.zone-add { display: flex; gap: 8px; margin: 12px 0; }
+.zone-add input { padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font); font-size: 14px; }
+.modal-sec { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.modal-sec label { font-size: 12px; color: var(--label); font-weight: 600; display: block; margin-bottom: 6px; }
+.modal-sec textarea { width: 100%; min-height: 64px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 12px; resize: vertical; }
+.modal-btnrow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.modal-btnrow button { flex: 1; min-width: 110px; padding: 10px; border-radius: 8px; cursor: pointer; font-family: var(--font); font-size: 13px; font-weight: 600; border: 1px solid var(--accent-border); background: var(--accent-dim); color: var(--accent); }
+.modal-close { background: var(--accent); color: #fff; border: none; }
 </style>
 </head>
 <body class="locked">
@@ -686,9 +831,10 @@ body:not(.locked) #lockScreen { display: none; }
 <div class="topbar">
   <div class="brand">
     <div class="brand-logo"><span class="brand-nex">NEX</span><span class="brand-wave">WAVE</span></div>
-    <div class="brand-tag">NexWave Quote Tool</div>
+    <div class="brand-tag">Quote Tool</div>
   </div>
   <div class="topbar-right">
+    <div class="prod-pill" id="prodPill">BOSSO</div>
     <div class="quote-chip" id="quoteChip">QUOTE #—</div>
     <button class="tbtn tbtn-primary" onclick="printQuote()">🖨 Print</button>
     <button class="tbtn" onclick="resetAll()">↺ New Quote</button>
@@ -698,7 +844,7 @@ body:not(.locked) #lockScreen { display: none; }
 <!-- SUMMARY STRIP -->
 <div class="summary-strip">
   <div class="strip-cell">
-    <div class="strip-label">Total Installed Price</div>
+    <div class="strip-label" id="stripLabel0">Total Installed Price</div>
     <div class="strip-value" id="s-final">$0.00</div>
   </div>
   <div class="strip-cell">
@@ -721,7 +867,19 @@ body:not(.locked) #lockScreen { display: none; }
   <!-- ══ FORM SIDE ══ -->
   <div class="form-side">
 
-    <!-- CUSTOMER -->
+    <!-- PRODUCT SWITCH -->
+    <div class="prod-switch-wrap">
+      <div class="prod-switch">
+        <div class="prod-opt on-teal" id="prod-bosso" onclick="setProduct('bosso')">
+          <div class="pn">Bosso</div><div class="ps">LED bags · track pieces · brain controller</div>
+        </div>
+        <div class="prod-opt" id="prod-jelly" onclick="setProduct('jelly')">
+          <div class="pn">JellyFish</div><div class="ps">eave strands · controllers · power supplies</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMER (shared) -->
     <div class="section">
       <div class="section-head">
         <div class="section-icon">C</div>
@@ -734,7 +892,7 @@ body:not(.locked) #lockScreen { display: none; }
         </div>
         <div class="fgrid g3">
           <div class="frow"><label>Address</label><input type="text" id="customerAddress" placeholder="Street address" oninput="liveCalc()"/></div>
-          <div class="frow"><label>City / Zip</label><input type="text" id="customerCityZip" placeholder="City, TX 00000" oninput="liveCalc()"/></div>
+          <div class="frow"><label>City / Zip</label><input type="text" id="customerCityZip" placeholder="City, TX 00000" oninput="onZipInput()"/></div>
           <div class="frow"><label>Salesman</label>
             <select id="salesMan" onchange="liveCalc()">
               <option value="">— Select —</option>
@@ -756,7 +914,9 @@ body:not(.locked) #lockScreen { display: none; }
         <div class="section-title">Job Settings</div>
       </div>
       <div class="section-body">
-        <div class="fgrid g4">
+
+        <!-- shared crew/hours/difficulty -->
+        <div class="fgrid g3">
           <div class="frow">
             <label>Crew Size</label>
             <select id="crewSize" onchange="liveCalc()">
@@ -769,37 +929,123 @@ body:not(.locked) #lockScreen { display: none; }
             </select>
           </div>
           <div class="frow"><label>Work Hrs / Day</label><input type="number" id="workHoursDay" value="10" min="4" max="14" oninput="liveCalc()"/></div>
+          <div class="frow" style="max-width:100%;">
+            <label>Difficulty</label>
+            <div class="diff-row">
+              <button class="diff-btn" id="pill-Easy" onclick="setDiff('Easy')">Easy</button>
+              <button class="diff-btn normal" id="pill-Normal" onclick="setDiff('Normal')">Normal</button>
+              <button class="diff-btn" id="pill-Hard" onclick="setDiff('Hard')">Hard</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="fgrid g3">
           <div class="frow">
-            <label>Track Style</label>
-            <select id="trackStyle" onchange="liveCalc()">
-              <option>U Track</option><option>Flap Track</option><option selected>Back Track</option>
+            <label>Install Pace (ft/day)</label>
+            <select id="paceSel" onchange="liveCalc()">
+              <option value="180">180</option><option value="185">185</option>
+              <option value="190">190</option><option value="195">195</option>
+              <option value="200" selected>200</option><option value="205">205</option>
+              <option value="210">210</option><option value="215">215</option>
+              <option value="220">220</option><option value="225">225</option>
             </select>
           </div>
           <div class="frow">
-            <label>Track Color</label>
-            <select id="trackColor" onchange="liveCalc()">
-              <option>Black</option><option>White</option><option>Linen</option><option>Cameo</option>
-              <option>Victorian Grey</option><option>Musket Brown</option><option>Dark Bronze</option>
-              <option>Charcoal Grey</option><option>Wicker</option><option>Pebblestone Clay</option>
-              <option>Terra Bronze</option><option>Desert Sand</option><option>Classic Cream</option>
-              <option>Harbor Grey</option><option>Almond</option><option>Royal Brown</option>
-              <option>Sandstone</option><option>Russet Red</option><option>Evergreen</option>
-              <option>Montana Suede</option>
+            <label>Labor Rate ($/person/hr)</label>
+            <select id="rateSel" onchange="liveCalc()">
+              <option value="25">$25</option><option value="30">$30</option>
+              <option value="35">$35</option><option value="40" selected>$40</option>
+              <option value="45">$45</option>
+            </select>
+          </div>
+          <div class="frow">
+            <label>Travel Buffer</label>
+            <select id="travelBufSel" onchange="liveCalc()">
+              <option value="2">2%</option><option value="4" selected>4%</option>
+              <option value="6">6%</option><option value="8">8%</option>
             </select>
           </div>
         </div>
-        <div class="frow" style="max-width:300px;">
-          <label>Difficulty</label>
-          <div class="diff-row">
-            <button class="diff-btn" id="pill-Easy" onclick="setDiff('Easy')">Easy</button>
-            <button class="diff-btn normal" id="pill-Normal" onclick="setDiff('Normal')">Normal</button>
-            <button class="diff-btn" id="pill-Hard" onclick="setDiff('Hard')">Hard</button>
+        <div class="fgrid g2">
+          <div class="frow">
+            <label>Round-Trip Travel (min)</label>
+            <input type="number" id="travelMin" value="0" min="0" step="1" oninput="liveCalc()"/>
+            <div id="zoneMatchNote" style="font-size:11px;color:var(--muted);margin-top:4px;">Type minutes, or save the zip as a zone to auto-fill next time.</div>
+          </div>
+          <div class="frow">
+            <label>Travel Zones (by zip)</label>
+            <button type="button" class="mini-btn" onclick="openZones()">⚙ Manage · Import · Export</button>
           </div>
         </div>
+
+        <!-- BOSSO-SPECIFIC -->
+        <div id="bossoSpec">
+          <div class="spec-sub">Bosso Components</div>
+          <div class="fgrid g2">
+            <div class="frow">
+              <label>Controller</label>
+              <select id="bossoCtrlSel" onchange="liveCalc()">
+                <option value="0" selected>Bosso Controller</option>
+                <option value="1">NexWave Controller</option>
+              </select>
+            </div>
+            <div class="frow">
+              <label>Track Style</label>
+              <select id="trackStyle" onchange="liveCalc()">
+                <option>U Track</option><option>Flap Track</option><option selected>Back Track</option>
+              </select>
+            </div>
+            <div class="frow">
+              <label>Track Color</label>
+              <select id="trackColor" onchange="liveCalc()">
+                <option>Black</option><option>White</option><option>Linen</option><option>Cameo</option>
+                <option>Victorian Grey</option><option>Musket Brown</option><option>Dark Bronze</option>
+                <option>Charcoal Grey</option><option>Wicker</option><option>Pebblestone Clay</option>
+                <option>Terra Bronze</option><option>Desert Sand</option><option>Classic Cream</option>
+                <option>Harbor Grey</option><option>Almond</option><option>Royal Brown</option>
+                <option>Sandstone</option><option>Russet Red</option><option>Evergreen</option>
+                <option>Montana Suede</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- JELLYFISH-SPECIFIC -->
+        <div id="jellySpec" style="display:none;">
+          <div class="spec-sub">JellyFish System</div>
+          <div class="fgrid g2">
+            <div class="frow">
+              <label>System Voltage</label>
+              <select id="jfVolt" onchange="pickVolt(this.value)">
+                <option value="12V">12V</option>
+                <option value="24V">24V</option>
+                <option value="48V" selected>48V</option>
+              </select>
+            </div>
+            <div class="frow">
+              <label>Eave Light Strand</label>
+              <select id="jfStrandSel" onchange="liveCalc()"></select>
+            </div>
+          </div>
+          <div class="fgrid g4">
+            <div class="frow"><label>Controller</label><select id="jfCtrlSel" onchange="liveCalc()"></select></div>
+            <div class="frow"><label>Ctrl Qty <span style="font-size:10px;color:var(--muted);">(auto)</span></label><input type="number" id="jfCtrlQty" value="1" min="0" readonly tabindex="-1" style="opacity:.7;cursor:not-allowed;"/></div>
+            <div class="frow"><label>Power Supply</label><select id="jfPsSel" onchange="liveCalc()"></select></div>
+            <div class="frow"><label>PS Qty <span style="font-size:10px;color:var(--muted);">(auto)</span></label><input type="number" id="jfPsQty" value="1" min="0" readonly tabindex="-1" style="opacity:.7;cursor:not-allowed;"/></div>
+          </div>
+          <div id="jfVoltFlag"></div>
+          <div class="spec-sub">JellyFish Track</div>
+          <div class="fgrid g2">
+            <div class="frow"><label>Track Style</label><select id="jfTrackSel" onchange="liveCalc()"></select></div>
+            <div class="frow"><label>Track Color</label><select id="jfColorSel" onchange="liveCalc()"></select></div>
+          </div>
+          <div class="flag-warn">⚠️ Still to confirm for JellyFish: the track colors (carried over from the Bosso list). Wire costs are live — 16/4 at $0.63/ft ($315 ÷ 500 ft) and 14/2 at $0.35/ft.</div>
+        </div>
+
       </div>
     </div>
 
-    <!-- SEGMENTS -->
+    <!-- SEGMENTS (shared) -->
     <div class="section">
       <div class="section-head">
         <div class="section-icon">S</div>
@@ -823,7 +1069,7 @@ body:not(.locked) #lockScreen { display: none; }
       </div>
     </div>
 
-    <!-- HOMERUN & JUMPS -->
+    <!-- HOMERUN & JUMPS (shared) -->
     <div class="section">
       <div class="section-head">
         <div class="section-icon">W</div>
@@ -854,7 +1100,7 @@ body:not(.locked) #lockScreen { display: none; }
       </div>
     </div>
 
-    <!-- PRICING -->
+    <!-- PRICING (shared) -->
     <div class="section">
       <div class="section-head">
         <div class="section-icon">$</div>
@@ -941,6 +1187,14 @@ body:not(.locked) #lockScreen { display: none; }
           </div>
 
         </div>
+
+        <!-- SHARED: minimum profit floor (applies to both Bosso and JellyFish) -->
+        <div id="profitFloorWrap" style="max-width:280px;margin-top:4px;">
+          <div class="frow"><label>Min Profit Floor ($) — both systems</label>
+            <input type="number" id="profitFloor" value="800" min="0" step="50" oninput="liveCalc()"/></div>
+        </div>
+
+        <div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;" id="marginNote"></div>
       </div>
     </div>
 
@@ -964,7 +1218,46 @@ body:not(.locked) #lockScreen { display: none; }
 
 <div id="printContainer"></div>
 
+<div class="modal-overlay" id="zoneModal">
+  <div class="modal-box">
+    <h3>Travel Zones</h3>
+    <div class="msub">Save a zip and its round-trip drive time (minutes). When a customer's zip matches, travel auto-fills. Saved on this device.</div>
+    <div id="zoneList"></div>
+    <div class="zone-add">
+      <input type="text" id="zAddZip" placeholder="Zip" maxlength="5" style="width:90px;"/>
+      <input type="number" id="zAddMin" placeholder="Round-trip min" min="0" style="flex:1;"/>
+      <button class="mini-btn" style="width:auto;padding:9px 16px;" onclick="addZone()">Add</button>
+    </div>
+
+    <div class="modal-sec">
+      <label>Export — copy this and email it, or download the file</label>
+      <textarea id="zExport" readonly onclick="this.select()"></textarea>
+      <div class="modal-btnrow">
+        <button onclick="copyZones()">📋 Copy</button>
+        <button onclick="downloadZones()">⬇ Download file</button>
+      </div>
+    </div>
+
+    <div class="modal-sec">
+      <label>Import — paste a list here (or load a file) and Load</label>
+      <textarea id="zImport" placeholder="Paste an exported list here"></textarea>
+      <div class="modal-btnrow">
+        <button onclick="importZonesText()">Load pasted list</button>
+        <button onclick="document.getElementById('zFile').click()">📂 Load file</button>
+        <input type="file" id="zFile" accept=".json,.txt" style="display:none;" onchange="importZonesFile(event)"/>
+      </div>
+    </div>
+
+    <div class="modal-btnrow" style="margin-top:18px;">
+      <button class="modal-close" onclick="closeZones()">Done</button>
+    </div>
+  </div>
+</div>
+
 <script>
+/* ════════════════════════════════════════════════════════════════
+   BOSSO DATA  (NexWave's existing pricing — UNCHANGED)
+   ════════════════════════════════════════════════════════════════ */
 const S={
   Waste_Pct:0.10,LEDs_Per_Foot:1.5,LEDs_Per_Injection_Group:50,
   Capacity_Feet_Per_Box:200,T_Cost:3.11,Jump2_Cost:1.02,Jump5_Cost:1.84,Jump10_Cost:3.10,
@@ -975,15 +1268,117 @@ const S={
   Track_Piece_Length_ft:6.5,Track_Piece_Cost:8,
   Shipping_Cost:250,Sales_Tax_Rate:0.0825,
   Crew_Eff:{1:0.65,2:1.00,3:1.30,4:1.55,5:1.70,6:1.85},
-  Diff_Mult:{Easy:1.10,Normal:1.00,Hard:0.85},
+  Diff_Mult:{Easy:0.95,Normal:1.00,Hard:1.15},
 };
 const AREAS=['Front','Back','Left','Right','Patio','Porch','Garage','Gazebo','Other'];
+
+/* ════════════════════════════════════════════════════════════════
+   JELLYFISH DATA  (cost = NexWave's JellyFish purchase price)
+   ⚙️ CONFIRM the placeholders below — costs flow downstream from here.
+   ════════════════════════════════════════════════════════════════ */
+const JF_STRAND_LEN=37.5;          // ft per eave light strand
+const JF_TRACK_LEN=7.5;            // ft per track stick
+
+/* WIRING (mirrors the Bosso install method):
+   • 16/4 = jumps + homerun, ALL JellyFish voltages, billed by the foot (as run, no padding)
+   • 14/2 = power injection every 50 pixels + 1.5 ft slack, plus homerun — 12V ONLY, no T connectors */
+const JF_WIRE16_4_BOX_COST=315;    // 500 ft box of 16/4 ≈ $315  (jump + homerun wire)
+const JF_WIRE16_4_BOX_FT=500;
+const JF_WIRE16_4_COST_PER_FT=JF_WIRE16_4_BOX_COST/JF_WIRE16_4_BOX_FT;  // = $0.63/ft
+const JF_WIRE14_2_COST_PER_FT=0.35; // 14/2 injection wire, per foot (same as Bosso)
+const JF_INJECT_SLACK_FT=1.5;       // slack per injection run (same as Bosso)
+const JF_LEDS_PER_INJECTION=50;     // one injection per 50 pixels
+const JF_DIFFICULTY={Easy:0.95,Normal:1.00,Hard:1.15};  // labor-cost multiplier (matches Bosso)
+/* JellyFish pricing parity with Bosso (its OWN values — change freely, no Bosso cost is pulled in). */
+const JF_SHIPPING_COST=250;         // shipping added to JellyFish cost  <-- confirm
+const JF_SHIPPING_SELL=250;         // HCP shipping & misc line (sell)
+const JF_SALES_TAX_RATE=0.0825;     // 8.25% (same as Bosso)
+const JF_WASTE_PCT=0.10;            // #4: 10% waste on TRACK only (strands stay on measured feet)
+/* #3 long-run signal modules (all JellyFish voltages). 'sell' = fixed price on the quote. */
+const JF_RX_COST=23.95, JF_TX_COST=23.95;          // <-- tentative unit cost
+const JF_RX_SELL=23.95, JF_TX_SELL=23.95;          // <-- set markup later if wanted
+const JF_HOMERUN_RX_FT=75;          // homerun over this many ft → +1 RX module
+const JF_JUMP_MODULE_FT=20;         // each jump over this many ft → +1 TX and +1 RX
+
+/* Controller auto-spec (mirrors the Bosso brain + JellyFish dealer logic) */
+const JF_LIGHTS_PER_STRAND=50;      // each eave strand = 50 lights (regardless of spacing)
+const JF_CONTROL_LIMIT={'48V':900,'24V':900,'12V':660};  // ft one controller can control
+const BOSSO_CONTROL_LIMIT=660;      // ft one Bosso brain can control
+const BOSSO_BOX_INTERVAL=200;       // a Bosso power box every 200 ft after the brain's first 200
+
+/* Fixed hardware SELL prices (above cost, never shown under cost). */
+const BOSSO_CTRL_SELL=350;          // Bosso brain controller line
+const BOSSO_PS_SELL=250;            // Bosso power-supply line (each)
+
+/* Two Bosso controller options (dropdown). Control cap is 660 ft for both for now.
+   psInterval = ft the controller's own power covers, and the spacing of added power supplies. */
+const BOSSO_CONTROLLERS=[
+  {n:'Bosso Controller',  ctrlCost:152, psCost:112, psInterval:200, ctrlSell:350, psSell:250},
+  {n:'NexWave Controller',ctrlCost:136, psCost:136, psInterval:300, ctrlSell:350, psSell:250},
+];
+const BOSSO_SHIP_SELL=250;          // Bosso shipping & misc line
+
+/* Shared floor margin (#1/#2/#5): a discount that would drop below this flags red. */
+const FLOOR_MARGIN=0.30;            // 30%
+
+const JF_CONTROLLERS=[
+  {n:'48V Controller (350W)', v:'48V', p:397.20, sell:625, cap:300},
+  {n:'48V Controller (500W)', v:'48V', p:491.99, sell:755, cap:400},
+  {n:'Outdoor 48V Controller (350W)', v:'48V', p:478.07, sell:750, cap:300},
+  {n:'Outdoor 48V Controller (500W)', v:'48V', p:589.82, sell:905, cap:400},
+  {n:'24V Controller (500W)', v:'24V', p:503.25, sell:770, cap:400},
+  {n:'Outdoor 24V Controller (500W)', v:'24V', p:618.07, sell:950, cap:400},
+  {n:'NEW 24V Controller (350W)', v:'24V', p:405.99, sell:640, cap:300},
+  {n:'NEW Outdoor 24V Controller (350W)', v:'24V', p:503.82, sell:795, cap:300},
+  {n:'NEW 12V Controller (350W)', v:'12V', p:405.99, sell:640, cap:267},
+  {n:'NEW Outdoor 12V Controller (350W)', v:'12V', p:503.82, sell:795, cap:267},
+  {n:'NEW BETA Mini Controller (12V/200W)', v:'12V', p:265.73, sell:415, cap:200},
+  {n:'NEW BETA Mini Controller (24V/200W)', v:'24V', p:265.55, sell:415, cap:200},
+];
+const JF_POWER=[
+  {n:'48V Power Supply (350W)', v:'48V', p:262.30, sell:455, cap:300},
+  {n:'48V Power Supply (500W)', v:'48V', p:357.09, sell:625, cap:400},
+  {n:'Outdoor 48V Power Supply (500W)', v:'48V', p:487.41, sell:855, cap:400},
+  {n:'NEW Outdoor 48V Power Supply (350W)', v:'48V', p:347.42, sell:605, cap:300},
+  {n:'24V Power Supply (500W)', v:'24V', p:339.30, sell:595, cap:400},
+  {n:'Outdoor 24V Power Supply (500W)', v:'24V', p:459.16, sell:805, cap:400},
+  {n:'NEW 24V Power Supply (350W)', v:'24V', p:271.10, sell:470, cap:300},
+  {n:'NEW Outdoor 24V Power Supply (350W)', v:'24V', p:373.17, sell:645, cap:300},
+  {n:'NEW Outdoor 12V Power Supply (350W)', v:'12V', p:373.17, sell:645, cap:267},
+  {n:'— None / Included —', v:'any', p:0, sell:0, cap:0},
+];
+const JF_STRANDS=[
+  {n:'ORIGINAL Jelly Lights – Eave Strand (9")', v:'48V', p:221.19, sp:9},
+  {n:'NEW Jelly Lights – Eave Strand (6")', v:'48V', p:221.19, sp:6},
+  {n:'NEW Jelly Lights – Eave Strand (16")', v:'48V', p:131.06, sp:16},
+  {n:'NEW 12V Jelly Lights – Eave Strand (9")', v:'12V', p:126.66, sp:9},
+];
+const JF_TRACKS=[
+  {n:'ORIGINAL Standard Track (9" spaced)', p:8.70},
+  {n:'9" Spaced Canted Track', p:18.15},
+  {n:'Blank Track', p:8.70},
+  {n:'Fat Track', p:15.42},
+  {n:'Z-Flashing', p:15.90},
+];
+const JF_COLORS=['Black','White','Linen','Cameo','Victorian Grey','Musket Brown','Dark Bronze',
+  'Charcoal Grey','Wicker','Pebblestone Clay','Terra Bronze','Desert Sand','Classic Cream',
+  'Harbor Grey','Almond','Royal Brown','Sandstone','Russet Red','Evergreen','Montana Suede'];
+
+/* ════════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════════ */
+let product='bosso';                 // 'bosso' | 'jelly'
 let st={diff:'Normal',margin:'Preset',buf:'Pct',dis:'None',comm:'Pct'};
+let jfVolt='48V';
 let segN=0,jLog=[],jId=0,R={};
 
 window.onload=()=>{
   setDiff('Normal');
+  initJFSelects();
+  loadZones();
   addSeg();
+  setProduct('bosso');
+  matchZone();
   document.getElementById('jdist').addEventListener('keydown',e=>{if(e.key==='Enter')addJump();});
 };
 
@@ -1012,33 +1407,79 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const formSide = document.querySelector('.form-side');
   const main = document.querySelector('.main');
   let isDown = false, startX = 0, startW = 0;
-
   resizer.addEventListener('mousedown', e => {
-    isDown = true;
-    startX = e.clientX;
-    startW = formSide.offsetWidth;
+    isDown = true; startX = e.clientX; startW = formSide.offsetWidth;
     resizer.classList.add('dragging');
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
   });
-
   document.addEventListener('mousemove', e => {
     if(!isDown) return;
     const dx = e.clientX - startX;
     const newW = Math.max(300, Math.min(startW + dx, main.offsetWidth - 280));
     formSide.style.width = newW + 'px';
   });
-
   document.addEventListener('mouseup', () => {
     if(!isDown) return;
-    isDown = false;
-    resizer.classList.remove('dragging');
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
+    isDown = false; resizer.classList.remove('dragging');
+    document.body.style.cursor = ''; document.body.style.userSelect = '';
   });
 })();
 
-// ── SEGMENTS ──
+/* ── PRODUCT SWITCH ── */
+function setProduct(p){
+  product=p;
+  const pb=document.getElementById('prod-bosso'), pj=document.getElementById('prod-jelly');
+  const note='Margin % is a protected floor — commission is added on top, then the price solves so you still clear the margin after commission. The Min Profit Floor bumps the price up if a small job would profit less than that.';
+  if(p==='bosso'){
+    document.body.classList.remove('prod-jelly');
+    pb.className='prod-opt on-teal'; pj.className='prod-opt';
+    document.getElementById('bossoSpec').style.display='';
+    document.getElementById('jellySpec').style.display='none';
+    document.getElementById('prodPill').textContent='BOSSO';
+  } else {
+    document.body.classList.add('prod-jelly');
+    pb.className='prod-opt'; pj.className='prod-opt on-purple';
+    document.getElementById('bossoSpec').style.display='none';
+    document.getElementById('jellySpec').style.display='';
+    document.getElementById('prodPill').textContent='JELLYFISH';
+  }
+  document.getElementById('stripLabel0').textContent='Total Installed Price';
+  document.getElementById('marginNote').innerHTML='<b>'+(p==='bosso'?'Bosso':'JellyFish')+':</b> '+note;
+  renderJumps();
+  liveCalc();
+}
+
+/* ── JELLYFISH SELECTS ── */
+function jfFill(sel, items, filterV){
+  sel.innerHTML='';
+  items.forEach((it,i)=>{
+    if(filterV && it.v && it.v!=='any' && it.v!==filterV) return;
+    const o=document.createElement('option');
+    o.value=i;
+    o.textContent = it.p>0 ? it.n+'  —  $'+it.p.toFixed(2) : it.n;
+    sel.appendChild(o);
+  });
+}
+function initJFSelects(){
+  jfFill(document.getElementById('jfTrackSel'), JF_TRACKS);
+  const cs=document.getElementById('jfColorSel');
+  cs.innerHTML='';
+  JF_COLORS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;cs.appendChild(o);});
+  refreshJFVolt();
+}
+function refreshJFVolt(){
+  jfFill(document.getElementById('jfStrandSel'), JF_STRANDS, jfVolt);
+  jfFill(document.getElementById('jfCtrlSel'), JF_CONTROLLERS, jfVolt);
+  jfFill(document.getElementById('jfPsSel'), JF_POWER, jfVolt);
+  const flag=document.getElementById('jfVoltFlag');
+  const hasStrand=JF_STRANDS.some(s=>s.v===jfVolt);
+  flag.innerHTML = hasStrand ? '' :
+    '<div class="flag-warn">⚠️ No '+jfVolt+' eave strand is on the pricing sheet — pick another voltage or add the '+jfVolt+' strand price to the data block.</div>';
+}
+function pickVolt(v){ jfVolt=v; refreshJFVolt(); liveCalc(); }
+
+// ── SEGMENTS (shared) ──
 function addSeg(){
   segN++;const id=segN;
   const tr=document.createElement('tr');
@@ -1062,7 +1503,7 @@ function getSegs(){
   return s;
 }
 
-// ── JUMPS ──
+// ── JUMPS (shared log; each product converts gaps its own way) ──
 function wires(d){let r=d;const w10=Math.floor(r/10);r%=10;const w5=Math.floor(r/5);r%=5;const w2=r>0?Math.ceil(r/2):0;return{w10,w5,w2};}
 function addJump(){
   const inp=document.getElementById('jdist');
@@ -1072,18 +1513,60 @@ function addJump(){
 }
 function delJump(id){jLog=jLog.filter(j=>j.id!==id);renderJumps();liveCalc();}
 function renderJumps(){
-  const jc=jCounts();
-  document.getElementById('t10').textContent='10ft: '+jc.j10;
-  document.getElementById('t5').textContent='5ft: '+jc.j5;
-  document.getElementById('t2').textContent='2ft: '+jc.j2;
+  updateTally();
   const tbl=document.getElementById('jList');
   if(!jLog.length){tbl.innerHTML='<tr><td colspan="3" style="color:var(--muted);font-style:italic;padding:8px 0;">No jumps logged yet</td></tr>';return;}
   tbl.innerHTML=jLog.map(j=>{
-    const tags=(j.w.w10?'<span class="wtag w10">'+j.w.w10+'×10ft</span>':'')+(j.w.w5?'<span class="wtag w5">'+j.w.w5+'×5ft</span>':'')+(j.w.w2?'<span class="wtag w2">'+j.w.w2+'×2ft</span>':'');
+    let tags;
+    if(product==='jelly'){
+      tags='<span class="wtag w5">'+j.dist+'ft 16/4</span>';
+    } else {
+      tags=(j.w.w10?'<span class="wtag w10">'+j.w.w10+'×10ft</span>':'')+(j.w.w5?'<span class="wtag w5">'+j.w.w5+'×5ft</span>':'')+(j.w.w2?'<span class="wtag w2">'+j.w.w2+'×2ft</span>':'');
+    }
     return '<tr><td style="color:var(--muted);">'+j.dist+'ft gap</td><td>'+tags+'</td><td style="text-align:right;"><span class="j-del" onclick="delJump('+j.id+')">×</span></td></tr>';
   }).join('');
 }
+// Bosso wire combos from logged gaps
 function jCounts(){let j2=0,j5=0,j10=0;jLog.forEach(j=>{j2+=j.w.w2;j5+=j.w.w5;j10+=j.w.w10;});return{j2,j5,j10,total:jLog.length};}
+
+// ── JELLYFISH WIRING HELPERS (Bosso-style, billed by the foot) ──
+function jfGapsFeet(){ let g=0; jLog.forEach(j=>{ if(j.dist>0) g+=j.dist; }); return g; }
+function jfStrandSpacing(){
+  const list=JF_STRANDS.filter(s=>s.v===jfVolt);
+  const s=list[document.getElementById('jfStrandSel').selectedIndex];
+  return (s&&s.sp)?s.sp:9;
+}
+// 14/2 injection (12V only): one injection per 50 pixels, each run = feet-per-50-LEDs + slack
+function jfInjection(ft){
+  const sp=jfStrandSpacing();
+  const ledsPerFt=12/sp;                         // 9"→1.33/ft, 6"→2.0/ft, 16"→0.75/ft
+  const ftPerInj=JF_LEDS_PER_INJECTION/ledsPerFt; // 50 pixels worth of strand
+  const injCount=ftPerInj>0?Math.floor(ft/ftPerInj):0;
+  const wire14Inj=injCount*(ftPerInj+JF_INJECT_SLACK_FT);
+  return {sp,ledsPerFt,ftPerInj,injCount,wire14Inj};
+}
+function updateTally(){
+  if(product==='jelly'){
+    const home=parseFloat(document.getElementById('homerunFt').value)||0;
+    const wire16=jfGapsFeet()+home;                          // 16/4: jumps + homerun (all voltages)
+    document.getElementById('t10').textContent='16/4: '+Math.round(wire16)+' ft';
+    if(jfVolt==='12V'){
+      const ft=getSegs().reduce((s,x)=>s+x.feet,0);
+      const inj=jfInjection(ft);
+      const wire14=inj.wire14Inj+home;                       // 14/2: injection runs + homerun (12V)
+      document.getElementById('t5').textContent='14/2: '+Math.round(wire14)+' ft';
+      document.getElementById('t2').textContent='Inj: '+inj.injCount;
+    } else {
+      document.getElementById('t5').textContent='14/2: n/a';
+      document.getElementById('t2').textContent='no inj.';
+    }
+  } else {
+    const jc=jCounts();
+    document.getElementById('t10').textContent='10ft: '+jc.j10;
+    document.getElementById('t5').textContent='5ft: '+jc.j5;
+    document.getElementById('t2').textContent='2ft: '+jc.j2;
+  }
+}
 
 // ── MODES ──
 function setDiff(d){
@@ -1124,7 +1607,93 @@ function setComm(m){
   liveCalc();
 }
 
-// ── CALC ──
+// ── ROUTER ──
+/* ── SHARED LABOR ENGINE (both products use this) ──
+   install hours from footage ÷ (pace/8 × crew-efficiency), +10% schedule buffer, +8 min/jump.
+   install cost gets the difficulty multiplier; travel does NOT.
+   travel = round-trip min × (1+buffer) × days (install hrs ÷ work-hrs/day, rounded up). */
+function computeLabor(measuredFeet,crewSize,totalJumps,diffMult){
+  const paceFtDay=parseFloat(document.getElementById('paceSel').value)||200;
+  const rate=parseFloat(document.getElementById('rateSel').value)||40;
+  const travelBuf=(parseFloat(document.getElementById('travelBufSel').value)||0)/100;
+  const travelMin=parseFloat(document.getElementById('travelMin').value)||0;
+  const workHoursDay=parseFloat(document.getElementById('workHoursDay').value)||10;
+  const ftPerHr=paceFtDay/8;                                   // 200 ft/day ÷ 8 = 25 ft/hr
+  const crewEff=S.Crew_Eff[crewSize]||1;
+  const effFtHr=Math.max(ftPerHr*crewEff,0.01);
+  const lhBuf=(measuredFeet/effFtHr)*(1+S.Schedule_Buffer_Pct);
+  const lhJump=totalJumps*S.Minutes_Per_Jump/60;
+  const installHours=lhBuf+lhJump;
+  const days=Math.max(1,Math.ceil(installHours/Math.max(workHoursDay,0.01)));
+  const travelHoursTotal=(travelMin/60)*(1+travelBuf)*days;
+  const installLabor=installHours*diffMult*rate*crewSize;
+  const travelLabor=travelHoursTotal*rate*crewSize;            // no difficulty on travel
+  return {paceFtDay,rate,travelBuf,travelMin,workHoursDay,ftPerHr,crewEff,
+          installHours,lhBuf,lhJump,days,travelHoursTotal,installLabor,travelLabor,
+          laborCost:installLabor+travelLabor};
+}
+
+/* ── TRAVEL ZONES (zip → round-trip minutes), saved on device ── */
+let ZONES={};
+const ZONE_KEY='nexwave_travel_zones';
+function loadZones(){ try{ const r=localStorage.getItem(ZONE_KEY); if(r) ZONES=JSON.parse(r)||{}; }catch(e){ ZONES=ZONES||{}; } }
+function persistZones(){ try{ localStorage.setItem(ZONE_KEY,JSON.stringify(ZONES)); }catch(e){/* preview sandbox: keep in-memory */} }
+function getZip(){ const m=(document.getElementById('customerCityZip').value||'').match(/(\d{5})/); return m?m[1]:''; }
+function matchZone(){
+  const zip=getZip(); const note=document.getElementById('zoneMatchNote');
+  if(zip && ZONES[zip]!=null){
+    document.getElementById('travelMin').value=ZONES[zip];
+    note.innerHTML='✓ Zone <b>'+zip+'</b> — '+ZONES[zip]+' min round trip (edit above to override)';
+  } else if(zip){
+    note.textContent='No saved zone for '+zip+' — type minutes, then add it below to reuse.';
+  } else {
+    note.textContent='Type minutes, or save the zip as a zone to auto-fill next time.';
+  }
+}
+function onZipInput(){ matchZone(); liveCalc(); }
+function openZones(){ renderZones(); document.getElementById('zoneModal').classList.add('open'); }
+function closeZones(){ document.getElementById('zoneModal').classList.remove('open'); }
+function renderZones(){
+  const list=document.getElementById('zoneList');
+  const zips=Object.keys(ZONES).sort();
+  list.innerHTML = zips.length ? zips.map(z=>
+    '<div class="zone-row"><span class="z-zip">'+z+'</span><span class="z-min">'+ZONES[z]+' min round trip</span>'+
+    '<span class="z-del" onclick="delZone(\''+z+'\')">✕ remove</span></div>').join('')
+    : '<div style="color:var(--muted);font-style:italic;padding:8px 0;font-size:13px;">No zones saved yet.</div>';
+  document.getElementById('zExport').value=JSON.stringify(ZONES);
+}
+function addZone(){
+  const zip=(document.getElementById('zAddZip').value||'').trim();
+  const min=parseFloat(document.getElementById('zAddMin').value);
+  if(!/^\d{5}$/.test(zip)){ alert('Enter a 5-digit zip.'); return; }
+  if(!(min>=0)){ alert('Enter the round-trip minutes.'); return; }
+  ZONES[zip]=Math.round(min); persistZones(); renderZones();
+  document.getElementById('zAddZip').value=''; document.getElementById('zAddMin').value='';
+  matchZone(); liveCalc();
+}
+function delZone(zip){ delete ZONES[zip]; persistZones(); renderZones(); matchZone(); liveCalc(); }
+function copyZones(){
+  const t=document.getElementById('zExport'); t.select();
+  try{ navigator.clipboard.writeText(t.value); }catch(e){ try{document.execCommand('copy');}catch(e2){} }
+}
+function downloadZones(){
+  const blob=new Blob([JSON.stringify(ZONES,null,0)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='nexwave-travel-zones.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function mergeZones(raw){
+  let obj; try{ obj=JSON.parse(raw); }catch(e){ alert('That doesn\'t look like a valid zone list.'); return false; }
+  if(typeof obj!=='object'||Array.isArray(obj)){ alert('That doesn\'t look like a valid zone list.'); return false; }
+  let n=0; Object.keys(obj).forEach(k=>{ if(/^\d{5}$/.test(k) && obj[k]>=0){ ZONES[k]=Math.round(obj[k]); n++; } });
+  persistZones(); renderZones(); matchZone(); liveCalc();
+  alert('Loaded '+n+' zone'+(n===1?'':'s')+'.'); return true;
+}
+function importZonesText(){ if(mergeZones(document.getElementById('zImport').value.trim())) document.getElementById('zImport').value=''; }
+function importZonesFile(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const rd=new FileReader(); rd.onload=()=>mergeZones(rd.result); rd.readAsText(f); ev.target.value='';
+}
+
 function liveCalc(){
   const segs=getSegs();
   if(!segs.length){
@@ -1132,10 +1701,12 @@ function liveCalc(){
     document.getElementById('quoteOut').style.display='none';
     ['s-final','s-cost','s-profit'].forEach(id=>document.getElementById(id).textContent='$0.00');
     document.getElementById('s-margin').textContent='—';
+    updateTally();
     return;
   }
-  calc();
-  renderOut();
+  if(product==='jelly'){ calcJelly(); renderOutJelly(); }
+  else { calc(); renderOut(); }
+  updateTally();
   document.getElementById('emptyMsg').style.display='none';
   document.getElementById('quoteOut').style.display='block';
   const qn=document.getElementById('hcpQuoteNum').value;
@@ -1145,9 +1716,17 @@ function liveCalc(){
   document.getElementById('s-final').textContent=fmt(R.finalPrice);
   document.getElementById('s-cost').textContent=fmt(R.totalCost);
   document.getElementById('s-profit').textContent=fmt(R.grossProfit);
+  const _pf=parseFloat(document.getElementById('profitFloor').value)||0;
+  const _profEl=document.getElementById('s-profit');
+  const _low=_pf>0 && R.grossProfit<_pf;
+  _profEl.classList.toggle('red',_low);
+  _profEl.classList.toggle('green',!_low);
   document.getElementById('s-margin').textContent=pct(R.actualMargin);
 }
 
+/* ════════════════════════════════════════════════════════════════
+   BOSSO CALCULATION  — UNCHANGED from the original NexWave tool
+   ════════════════════════════════════════════════════════════════ */
 function calc(){
   const segs=getSegs();
   const crewSize=parseInt(document.getElementById('crewSize').value);
@@ -1171,91 +1750,333 @@ function calc(){
   const bags50LED=Math.ceil(totalLEDs/S.LEDs_Per_Injection_Group);
   const trackPieces=Math.floor(billableFeet/S.Track_Piece_Length_ft);
   const trackCost=trackPieces*S.Track_Piece_Cost;
-  const brainControllers=1;
-  const powerOnlyBoxes=Math.max(0,Math.ceil(measuredFeet/S.Capacity_Feet_Per_Box)-1);
+  const bCtrl=BOSSO_CONTROLLERS[parseInt(document.getElementById('bossoCtrlSel').value)||0]||BOSSO_CONTROLLERS[0];
+  const brainControllers=Math.max(1,Math.ceil(measuredFeet/BOSSO_CONTROL_LIMIT));
+  // power boxes: walk the run in 660 ft zones; each zone gets a box every (controller interval) ft after the first
+  let powerOnlyBoxes=0,remBosso=measuredFeet;
+  for(let z=0;z<brainControllers;z++){
+    const zoneFt=Math.min(remBosso,BOSSO_CONTROL_LIMIT);
+    powerOnlyBoxes+=Math.max(0,Math.ceil(zoneFt/bCtrl.psInterval)-1);
+    remBosso-=zoneFt;
+  }
+  // homerun is bridged by jump wires too (auto), so the user doesn't log it as a jump
+  const hrW=homerunFt>0?wires(homerunFt):{w10:0,w5:0,w2:0};
   const jc=jCounts();
-  const jump2=jc.j2,jump5=jc.j5,jump10=jc.j10,totalJumps=jc.total;
+  const jump2=jc.j2+hrW.w2,jump5=jc.j5+hrW.w5,jump10=jc.j10+hrW.w10;
+  const totalJumps=jc.total+(homerunFt>0?1:0);
   const jumpCost=jump2*S.Jump2_Cost+jump5*S.Jump5_Cost+jump10*S.Jump10_Cost;
   const ftPerInj=S.LEDs_Per_Injection_Group/S.LEDs_Per_Foot;
   const tConn=Math.floor(measuredFeet/ftPerInj);
   const tCost=tConn*S.T_Cost;
   const wire14Inj=tConn*(ftPerInj+S.Inject_Slack_Ft);
   const wire14Total=Math.round(homerunFt+wire14Inj);
-  const wire14Cost=wire14Inj*S.Wire14_2_Cost_Per_Ft;
+  const wire14Cost=(wire14Inj+homerunFt)*S.Wire14_2_Cost_Per_Ft;   // homerun (controller→first LED) runs on 14/2 too
   const lightCost=bags50LED*S.Bag50LED_Cost;
-  const ctrlCost=brainControllers*S.Brain_Controller_Cost;
-  const pwrCost=powerOnlyBoxes*S.PowerOnly_Box_Cost;
+  const ctrlCost=brainControllers*bCtrl.ctrlCost;
+  const pwrCost=powerOnlyBoxes*bCtrl.psCost;
   const preMisc=lightCost+trackCost+jumpCost+tCost+wire14Cost+ctrlCost+pwrCost;
   const miscBuf=bufMode==='Pct'?preMisc*miscBufPct:miscBufFlat;
   const matCost=preMisc+miscBuf+S.Shipping_Cost;
   const crewEff=S.Crew_Eff[crewSize]||1;
   const diffMult=S.Diff_Mult[difficulty]||1;
-  const effFtHr=S.Feet_Per_Hour_Crew*crewEff*diffMult;
-  const lhBase=measuredFeet/Math.max(effFtHr,0.01);
-  const lhBuf=lhBase*(1+S.Schedule_Buffer_Pct);
-  const lhJump=totalJumps*S.Minutes_Per_Jump/60;
-  const lhTotal=lhBuf+lhJump;
-  const laborCost=Math.max(S.Min_Labor_Hours,lhTotal)*S.Labor_Cost_Per_Hour*crewSize;
+  const L=computeLabor(measuredFeet,crewSize,totalJumps,diffMult);
+  const laborCost=L.laborCost;
+  const lhTotal=L.installHours;
   const totalCost=matCost+laborCost;
-  const crewDays=lhTotal/workHoursDay;
+  const crewDays=L.days;
   const schedDays=Math.ceil(crewDays);
-  const basePrice=totalCost/(1-targetMargin);
-  let commAmt=commMode==='Pct'?basePrice*commPct:commFlat;
-  const floorP=(totalCost+commAmt)/(1-targetMargin);
-  let disAmt=0,grossP=floorP;
-  if(disMode==='Pct'&&disPct>0){grossP=floorP/(1-disPct);disAmt=grossP-floorP;}
-  else if(disMode==='Flat'&&disFlat>0){grossP=floorP+disFlat;disAmt=disFlat;}
-  const netP=grossP-disAmt;
+  // Solve full price so margin-AFTER-commission = target. Commission (%) is on the ACTUAL sale,
+  // so it scales down when a discount is applied. Flat commission is a fixed dollar.
+  const kFrac=commMode==='Pct'?commPct:0;
+  let denom=1-kFrac-targetMargin; if(denom<0.05)denom=0.05;   // guard
+  let fullNet=commMode==='Pct'?(totalCost/denom):((totalCost+commFlat)/(1-targetMargin));
+  // Min profit floor (shared): raises the FULL price so profit clears the floor on small jobs
+  const profitFloor=parseFloat(document.getElementById('profitFloor').value)||0;
+  let floorApplied=false;
+  if(profitFloor>0){
+    const floorNet=commMode==='Pct'?((totalCost+profitFloor)/(1-kFrac)):(totalCost+commFlat+profitFloor);
+    if(floorNet>fullNet){ fullNet=floorNet; floorApplied=true; }
+  }
+  // REAL discount lowers the price (clamped so it can't drive the price below 0)
+  let disAmt=0,netP=fullNet;
+  if(disMode==='Pct'&&disPct>0){disAmt=fullNet*Math.min(disPct,1);netP=fullNet-disAmt;}
+  else if(disMode==='Flat'&&disFlat>0){disAmt=Math.min(disFlat,fullNet);netP=fullNet-disAmt;}
+  const hasDisc=disAmt>0;
+  // commission: % of the ACTUAL collected price (scales with discount); flat stays fixed
+  const commAmt=commMode==='Pct'?kFrac*netP:commFlat;
+  const commFull=commMode==='Pct'?kFrac*fullNet:commFlat;
+  // full (no-discount) figures
+  const fullProfit=fullNet-totalCost-commFull;
+  const fullMargin=fullNet>0?fullProfit/fullNet:0;
+  const fullTax=fullNet*S.Sales_Tax_Rate;
+  const fullFinal=fullNet+fullTax;
+  // discounted figures (what you actually charge/collect)
   const grossProfit=netP-totalCost-commAmt;
   const actualMargin=netP>0?grossProfit/netP:0;
   const taxAmt=netP*S.Sales_Tax_Rate;
   const finalPrice=netP+taxAmt;
+  // below either guard: 30% margin OR the $ profit floor (only flagged once a discount is on)
+  const belowFloor=(actualMargin<FLOOR_MARGIN-1e-4) || (profitFloor>0 && grossProfit<profitFloor-0.5);
+  // max discount % that still holds the 30% margin floor (commission scales, so this accounts for it)
+  const floorNetMargin=totalCost/Math.max(0.05,(1-kFrac-FLOOR_MARGIN));
+  const floorNetProfit=profitFloor>0?(commMode==='Pct'?((totalCost+profitFloor)/(1-kFrac)):(totalCost+commFlat+profitFloor)):0;
+  const floorNetAll=Math.max(floorNetMargin,floorNetProfit);
+  const maxDiscPct=fullNet>0?Math.max(0,1-floorNetAll/fullNet):0;
+
+  // ── HCP back-calc: line items at FULL price; discount comes off the whole subtotal (like HCP) ──
   const hcpMat=lightCost+tCost+jumpCost+miscBuf+trackCost+wire14Cost;
   const hcpTotal=hcpMat+laborCost+commAmt;
   const hcpUnit=measuredFeet>0?hcpTotal/measuredFeet:0;
-  const HCP_MC=300,HCP_MP=200,HCP_MS=250;
-  const disFactor=disMode==='Pct'?(1-disPct):1;
-  const needSub=finalPrice/(disFactor*(1+S.Sales_Tax_Rate));
-  const fixMin=(HCP_MC*brainControllers)+(HCP_MP*powerOnlyBoxes)+HCP_MS;
-  const pfNeed=measuredFeet>0?(needSub-fixMin)/measuredFeet:0;
-  const hcpPF=Math.ceil(pfNeed*2)/2;
+  const hcpCS=bCtrl.ctrlSell*brainControllers;     // fixed
+  const hcpPS=bCtrl.psSell*powerOnlyBoxes;         // fixed
+  const fixedHW=hcpCS+hcpPS;
+  const needSub=fullNet;                             // HCP line items sum to the FULL (pre-discount) subtotal
+  let hcpPF=measuredFeet>0?(needSub-fixedHW-BOSSO_SHIP_SELL)/measuredFeet:0;
+  if(hcpPF<0)hcpPF=0;
+  hcpPF=Math.round(hcpPF*100)/100;                   // per-ft to the cent (exact total, no rounding drift)
   const pfSub=hcpPF*measuredFeet;
-  const surp=pfSub+fixMin-needSub;
-  const fw={c:brainControllers>0?1:0,p:powerOnlyBoxes>0?1:0,s:1};
-  const tw=fw.c+fw.p+fw.s;
-  let hcpCS=HCP_MC*brainControllers,hcpPS=HCP_MP*powerOnlyBoxes,hcpSS=HCP_MS;
-  if(surp!==0&&tw>0){
-    hcpCS=Math.max(HCP_MC*brainControllers,hcpCS-(surp*(fw.c/tw)));
-    hcpPS=powerOnlyBoxes>0?Math.max(HCP_MP*powerOnlyBoxes,hcpPS-(surp*(fw.p/tw))):0;
-    hcpSS=Math.max(HCP_MS,hcpSS-(surp*(fw.s/tw)));
-  }
-  const hcpSub=pfSub+hcpCS+hcpPS+hcpSS;
-  const hcpDisAmt=disMode==='Pct'?hcpSub*disPct:disMode==='Flat'?disFlat:0;
+  let hcpSS=needSub-pfSub-fixedHW;                   // shipping & misc absorbs the penny remainder
+  if(hcpSS<0)hcpSS=0;
+  const hcpSub=pfSub+fixedHW+hcpSS;
+  const hcpDisAmt=disMode==='Pct'?hcpSub*Math.min(disPct,1):disMode==='Flat'?Math.min(disFlat,hcpSub):0;
   const hcpAD=hcpSub-hcpDisAmt;
   const hcpFinal=hcpAD*(1+S.Sales_Tax_Rate);
   const areaBD={};segs.forEach(s=>{areaBD[s.area]=(areaBD[s.area]||0)+s.feet;});
 
   R={
+    product:'bosso',
     customerName:document.getElementById('customerName').value||'—',
     customerAddress:document.getElementById('customerAddress').value||'—',
     customerCityZip:document.getElementById('customerCityZip').value||'—',
     salesMan:document.getElementById('salesMan').value||'—',
     hcpQuoteNum:document.getElementById('hcpQuoteNum').value||'—',
-    difficulty,crewSize,workHoursDay,
+    difficulty,diffMult,crewSize,workHoursDay,
     trackStyle:document.getElementById('trackStyle').value,
     trackColor:document.getElementById('trackColor').value,
     measuredFeet,billableFeet,bags50LED,trackPieces,trackCost,
-    brainControllers,powerOnlyBoxes,tConn,jump2,jump5,jump10,totalJumps,
+    brainControllers,powerOnlyBoxes,bCtrlName:bCtrl.n,tConn,jump2,jump5,jump10,totalJumps,
     wire14Total,wire14Cost,homerunFt,
     lightCost,jumpCost,tCost,ctrlCost,pwrCost,
     miscBuf,matCost,laborCost,totalCost,
-    lhTotal,crewDays,schedDays,
-    recommendedPrice:grossP,disAmt,disMode,disPct,netP,
-    commAmt,taxAmt,finalPrice,grossProfit,actualMargin,targetMargin,
+    lhTotal,crewDays,schedDays,lab:L,
+    recommendedPrice:fullNet,disAmt,disMode,disPct,netP,hasDisc,
+    fullNet,fullFinal,fullMargin,fullProfit,belowFloor,maxDiscPct,profitFloor,
+    commAmt,taxAmt,finalPrice,grossProfit,actualMargin,targetMargin,floorApplied,
     hcpUnit,hcpPF,hcpCS,hcpPS,hcpSS,hcpSub,hcpDisAmt,hcpAD,hcpFinal,areaBD,segs
   };
 }
 
+/* ════════════════════════════════════════════════════════════════
+   JELLYFISH CALCULATION
+   JellyFish's OWN material/labor costs → run through the BOSSO pricing
+   engine (margin floor + commission on top + tax + HCP back-calc).
+   ════════════════════════════════════════════════════════════════ */
+function calcJelly(){
+  const segs=getSegs();
+  const ft=segs.reduce((s,x)=>s+x.feet,0);
+  const crew=parseInt(document.getElementById('crewSize').value);
+  const difficulty=st.diff;
+  const diffMult=JF_DIFFICULTY[difficulty]||1;
+
+  // selected components (filtered by voltage, by visible index) — JellyFish's OWN costs
+  const strandList=JF_STRANDS.filter(s=>s.v===jfVolt);
+  const strand=strandList[document.getElementById('jfStrandSel').selectedIndex]||null;
+  const noStrand=!strand;   // e.g. 24V has no eave strand on the sheet → strand cost would be $0
+  const ctrlList=JF_CONTROLLERS.filter(c=>c.v===jfVolt);
+  const ctrl=ctrlList[document.getElementById('jfCtrlSel').selectedIndex]||{n:'',p:0};
+  const psList=JF_POWER.filter(p=>p.v==='any'||p.v===jfVolt);
+  const ps=psList[document.getElementById('jfPsSel').selectedIndex]||{n:'',p:0};
+  const track=JF_TRACKS[document.getElementById('jfTrackSel').selectedIndex]||{n:'',p:0};
+  const color=document.getElementById('jfColorSel').value;
+
+  // ── Light count drives everything (footage ÷ spacing) ──
+  const spFt=(strand&&strand.sp)?(strand.sp/12):0.75;     // ft between lights
+  const totalLights=spFt>0?Math.round(ft/spFt):0;
+
+  // ── Auto-spec controllers + power supplies (mirrors JellyFish dealer logic) ──
+  const ctrlCap=ctrl.cap||0, psCap=ps.cap||0;
+  const controlLimit=JF_CONTROL_LIMIT[jfVolt]||900;
+  const ctrlQty=ft>0?Math.max(1,Math.ceil(ft/controlLimit)):0;             // by control distance
+  // power supplies = lights left after the controllers' own capacity, ÷ the supply's cap
+  const lightsAfterCtrl=Math.max(0,totalLights-ctrlQty*ctrlCap);
+  const psQty=(psCap>0)?Math.ceil(lightsAfterCtrl/psCap):0;
+  const underPowered=lightsAfterCtrl>0 && psCap<=0;   // controller can't cover the lights and no PS chosen
+  // write the auto counts back to the (read-only) qty fields so the UI shows them
+  const _cq=document.getElementById('jfCtrlQty'); if(_cq) _cq.value=ctrlQty;
+  const _pq=document.getElementById('jfPsQty');   if(_pq) _pq.value=psQty;
+
+  const strandCt=Math.ceil(totalLights/JF_LIGHTS_PER_STRAND)||0;  // each strand = 50 lights (all spacings)
+  const trackBillable=ft*(1+JF_WASTE_PCT);                 // #4: 10% waste on track only (our method)
+  const trackCt=Math.ceil(trackBillable/JF_TRACK_LEN)||0;
+  const strandPrice=strand?strand.p:0;
+  const strandTot=strandCt*strandPrice;
+  const trackTot=trackCt*track.p;
+  const ctrlTot=ctrlQty*ctrl.p;
+  const psTot=psQty*ps.p;
+
+  const homerunFt=parseFloat(document.getElementById('homerunFt').value)||0;
+  const is12V=(jfVolt==='12V');
+
+  // 16/4 wire — jumps + homerun, ALL voltages, by the foot (as run, no padding)
+  const gapsFeet=jfGapsFeet();
+  const wire16Feet=gapsFeet+homerunFt;
+  const wire16Cost=wire16Feet*JF_WIRE16_4_COST_PER_FT;
+
+  // 14/2 injection wire — 12V ONLY (per 50 px + slack), homerun also on 14/2, no T connectors
+  const inj=jfInjection(ft);
+  const injections=is12V?inj.injCount:0;
+  const wire14Feet=is12V?(inj.wire14Inj+homerunFt):0;
+  const wire14Cost=wire14Feet*JF_WIRE14_2_COST_PER_FT;
+
+  // #3 long-run modules (all voltages): homerun > 75ft → 1 RX; each jump > 20ft → 1 TX + 1 RX
+  const homerunRx=homerunFt>JF_HOMERUN_RX_FT?1:0;
+  let longJumps=0; jLog.forEach(j=>{ if(j.dist>JF_JUMP_MODULE_FT) longJumps++; });
+  const rxCount=homerunRx+longJumps;
+  const txCount=longJumps;
+  const moduleCost=rxCount*JF_RX_COST+txCount*JF_TX_COST;
+
+  // per-foot materials (the ones the HCP "Project Area" $/ft carries — excludes controllers/PS/shipping)
+  const perFtMat=strandTot+trackTot+wire16Cost+wire14Cost+moduleCost;
+  // buffer (on all materials, including controllers/PS)
+  const bufMode=st.buf;
+  const miscBufPct=parseFloat(document.getElementById('miscBufferPct').value)||0;
+  const miscBufFlat=parseFloat(document.getElementById('miscBufferFlat').value)||0;
+  const allMat=perFtMat+ctrlTot+psTot;
+  const miscBuf=bufMode==='Pct'?allMat*miscBufPct:miscBufFlat;
+
+  // labor — same footage-derived model as Bosso (install + travel)
+  const jfHomerun=parseFloat(document.getElementById('homerunFt').value)||0;
+  const jfTotalJumps=jLog.length+(jfHomerun>0?1:0);
+  const L=computeLabor(ft,crew,jfTotalJumps,diffMult);
+  const laborCost=L.laborCost;
+  const rate=L.rate;
+
+  const totalCost=allMat+miscBuf+JF_SHIPPING_COST+laborCost;
+
+  // ── BOSSO PRICING ENGINE ──
+  const targetMargin=st.margin==='Preset'?parseFloat(document.getElementById('marginPreset').value):(parseFloat(document.getElementById('marginCustom').value)||35)/100;
+  const commMode=st.comm;
+  const commPct=parseFloat(document.getElementById('commPct').value)||0.05;
+  const commFlat=parseFloat(document.getElementById('commFlat').value)||0;
+  const disMode=st.dis;
+  const disPct=(parseFloat(document.getElementById('discountPct').value)||0)/100;
+  const disFlat=parseFloat(document.getElementById('discountFlat').value)||0;
+
+  const kFrac=commMode==='Pct'?commPct:0;
+  let denom=1-kFrac-targetMargin; if(denom<0.05)denom=0.05;   // guard
+  let fullNet=commMode==='Pct'?(totalCost/denom):((totalCost+commFlat)/(1-targetMargin));
+  const profitFloor=parseFloat(document.getElementById('profitFloor').value)||0;
+  let floorApplied=false;
+  if(profitFloor>0){
+    const floorNet=commMode==='Pct'?((totalCost+profitFloor)/(1-kFrac)):(totalCost+commFlat+profitFloor);
+    if(floorNet>fullNet){ fullNet=floorNet; floorApplied=true; }
+  }
+  let disAmt=0,netP=fullNet;
+  if(disMode==='Pct'&&disPct>0){disAmt=fullNet*Math.min(disPct,1);netP=fullNet-disAmt;}
+  else if(disMode==='Flat'&&disFlat>0){disAmt=Math.min(disFlat,fullNet);netP=fullNet-disAmt;}
+  const hasDisc=disAmt>0;
+  const commAmt=commMode==='Pct'?kFrac*netP:commFlat;
+  const commFull=commMode==='Pct'?kFrac*fullNet:commFlat;
+  const fullProfit=fullNet-totalCost-commFull;
+  const fullMargin=fullNet>0?fullProfit/fullNet:0;
+  const fullTax=fullNet*JF_SALES_TAX_RATE;
+  const fullFinal=fullNet+fullTax;
+  const grossProfit=netP-totalCost-commAmt;
+  const actualMargin=netP>0?grossProfit/netP:0;
+  const taxAmt=netP*JF_SALES_TAX_RATE;
+  const finalPrice=netP+taxAmt;
+  const belowFloor=(actualMargin<FLOOR_MARGIN-1e-4) || (profitFloor>0 && grossProfit<profitFloor-0.5);
+  const floorNetMargin=totalCost/Math.max(0.05,(1-kFrac-FLOOR_MARGIN));
+  const floorNetProfit=profitFloor>0?(commMode==='Pct'?((totalCost+profitFloor)/(1-kFrac)):(totalCost+commFlat+profitFloor)):0;
+  const floorNetAll=Math.max(floorNetMargin,floorNetProfit);
+  const maxDiscPct=fullNet>0?Math.max(0,1-floorNetAll/fullNet):0;
+
+  // ── HCP BACK-CALC: hardware at FIXED sell prices, per-ft carries the rest, discount off whole subtotal ──
+  const ctrlSell=(ctrl.sell||0)*ctrlQty;            // fixed, above cost
+  const psSell=(ps.sell||0)*psQty;                  // fixed, above cost
+  const fixedHW=ctrlSell+psSell;
+  const hcpMat=perFtMat+miscBuf;
+  const hcpTotal=hcpMat+laborCost+commAmt;
+  const hcpUnit=ft>0?hcpTotal/ft:0;
+  const needSub=fullNet;                            // line items sum to the FULL (pre-discount) subtotal
+  let hcpPF=ft>0?(needSub-fixedHW-JF_SHIPPING_SELL)/ft:0;
+  if(hcpPF<0)hcpPF=0;
+  hcpPF=Math.round(hcpPF*100)/100;                  // per-ft to the cent (exact total, no rounding drift)
+  const pfSub=hcpPF*ft;
+  let hcpSS=needSub-pfSub-fixedHW;                  // shipping & misc flexes so HCP total = quote total
+  if(hcpSS<0)hcpSS=0;
+  const hcpCS=ctrlSell, hcpPS=psSell;
+  const hcpSub=pfSub+fixedHW+hcpSS;
+  const hcpDisAmt=disMode==='Pct'?hcpSub*Math.min(disPct,1):disMode==='Flat'?Math.min(disFlat,hcpSub):0;
+  const hcpAD=hcpSub-hcpDisAmt;
+  const hcpFinal=hcpAD*(1+JF_SALES_TAX_RATE);
+
+  // per-foot-by-margin menu (customer total incl tax at each margin, floor applied, no discount)
+  const menu=[30,35,40,45,50].map(m=>{
+    const mf=m/100;
+    const bp=totalCost/(1-mf);
+    const ca=commMode==='Pct'?bp*commPct:commFlat;
+    let fp=(totalCost+ca)/(1-mf);
+    if(profitFloor>0){ const mn=totalCost+ca+profitFloor; if(mn>fp)fp=mn; }
+    const tot=fp*(1+JF_SALES_TAX_RATE);
+    return {m, total:tot, perFt: ft>0?tot/ft:0};
+  });
+
+  const areaBD={};segs.forEach(s=>{areaBD[s.area]=(areaBD[s.area]||0)+s.feet;});
+
+  R={
+    product:'jelly',
+    customerName:document.getElementById('customerName').value||'—',
+    customerAddress:document.getElementById('customerAddress').value||'—',
+    customerCityZip:document.getElementById('customerCityZip').value||'—',
+    salesMan:document.getElementById('salesMan').value||'—',
+    hcpQuoteNum:document.getElementById('hcpQuoteNum').value||'—',
+    difficulty,crew,crewSize:crew,rate,diffMult,volt:jfVolt,is12V,lab:L,
+    measuredFeet:ft,
+    strandName:strand?strand.n:'(none)',strandCt,strandTot,
+    trackName:track.n,trackColor:color,trackCt,trackTot,
+    ctrlName:ctrl.n,ctrlQty,ctrlTot,psName:ps.n,psQty,psTot,
+    gapsFeet,homerunFt,wire16Feet,wire16Cost,
+    injections,wire14Feet,wire14Cost,jumpsLogged:jLog.length,
+    rxCount,txCount,moduleCost,totalLights,underPowered,noStrand,
+    materials:allMat,miscBuf,laborCost,totalCost,
+    recommendedPrice:fullNet,disAmt,disMode,disPct,netP,hasDisc,
+    fullNet,fullFinal,fullMargin,fullProfit,belowFloor,maxDiscPct,profitFloor,
+    commAmt,taxAmt,finalPrice,grossProfit,actualMargin,targetMargin,floorApplied,
+    hcpUnit,hcpPF,hcpCS,hcpPS,hcpSS,hcpSub,hcpDisAmt,hcpAD,hcpFinal,
+    menu,areaBD,segs
+  };
+}
+
+/* ── Shared: full vs discounted price block (Chris's view) ── */
+function dualPriceBlock(q){
+  const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const pct=n=>(n*100).toFixed(1)+'%';
+  const discLabel=q.disMode==='Pct'?((q.disPct*100).toFixed(0)+'% off'):(fmt(q.disAmt)+' off');
+  let h='<div class="out-section"><div class="out-section-head">Full vs Discounted</div>';
+  h+='<div class="out-row"><span class="olbl">Full price (no discount)</span><span class="oval">'+fmt(q.fullFinal)+' <span style="color:var(--muted);font-weight:400;">('+pct(q.fullMargin)+' margin)</span></span></div>';
+  if(q.hasDisc){
+    h+='<div class="out-row"><span class="olbl">With '+discLabel+'</span><span class="oval '+(q.belowFloor?'red':'grn')+'">'+fmt(q.finalPrice)+' <span style="font-weight:400;">('+pct(q.actualMargin)+' margin)</span></span></div>';
+    h+='</div>';
+    if(q.belowFloor){
+      const mB=q.actualMargin<FLOOR_MARGIN;
+      const pB=q.profitFloor>0 && q.grossProfit<q.profitFloor;
+      const cap='about '+(q.maxDiscPct*100).toFixed(1)+'% off is the most you can give';
+      let msg;
+      if(mB&&pB) msg='⚠ '+pct(q.actualMargin)+' margin and '+fmt(q.grossProfit)+' profit are both under your floors ('+pct(FLOOR_MARGIN)+' / '+fmt(q.profitFloor)+') — '+cap;
+      else if(mB) msg='⚠ '+pct(q.actualMargin)+' is below your '+pct(FLOOR_MARGIN)+' margin floor — '+cap;
+      else msg='⚠ '+fmt(q.grossProfit)+' profit is below your '+fmt(q.profitFloor)+' minimum — '+cap;
+      h+='<div class="margin-warn">'+msg+'</div>';
+    }
+    else h+='<div class="margin-ok">✓ still above your '+pct(FLOOR_MARGIN)+' margin floor and '+fmt(q.profitFloor)+' profit floor</div>';
+  } else {
+    h+='<div class="out-row"><span class="olbl">Room to discount</span><span class="oval" style="font-weight:400;color:var(--muted);">up to '+(q.maxDiscPct*100).toFixed(1)+'% before the '+pct(FLOOR_MARGIN)+' floor</span></div>';
+    h+='</div>';
+  }
+  return h;
+}
+
+/* ── BOSSO OUTPUT ── */
 function renderOut(){
   const q=R;
   const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
@@ -1271,8 +2092,6 @@ function renderOut(){
   const j2=q.jump2?'<div class="out-row"><span class="olbl">Jump Wires 2ft</span><span class="obadge">'+q.jump2+'</span></div>':'';
 
   document.getElementById('quoteOut').innerHTML=
-
-  // PRICE HERO
   '<div class="price-hero">'
   +'<div class="price-customer">Quote prepared for</div>'
   +'<div class="price-name">'+q.customerName+'</div>'
@@ -1280,18 +2099,15 @@ function renderOut(){
   +'<div class="price-amount">'+fmt(q.finalPrice)+'</div>'
   +'<div class="price-sub">Includes tax &nbsp;·&nbsp; Quote #'+q.hcpQuoteNum+'</div>'
   +'</div>'
-
-  // STATS
   +'<div class="out-stats">'
   +'<div class="stat-cell"><div class="stat-lbl">Measured Ft</div><div class="stat-val acc">'+q.measuredFeet.toFixed(0)+'</div></div>'
   +'<div class="stat-cell"><div class="stat-lbl">Crew Days</div><div class="stat-val">'+q.crewDays.toFixed(2)+'</div></div>'
   +'<div class="stat-cell"><div class="stat-lbl">Margin</div><div class="stat-val grn">'+pct(q.actualMargin)+'</div></div>'
   +'</div>'
-
-  // PARTS
+  +dualPriceBlock(q)
   +'<div class="out-section">'
   +'<div class="out-section-head"><span>Parts List</span><span style="font-size:11px;color:var(--muted);">'+q.trackStyle+' — '+q.trackColor+'</span></div>'
-  +'<div class="out-row"><span class="olbl">Brain Controllers</span><span class="obadge">'+q.brainControllers+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Controller — '+q.bCtrlName+'</span><span class="obadge">'+q.brainControllers+'</span></div>'
   +pBadge
   +'<div class="out-row"><span class="olbl">Bags of Lights (50 LEDs)</span><span class="obadge">'+q.bags50LED+'</span></div>'
   +'<div class="out-row"><span class="olbl">Track Pieces (6.5ft)</span><span class="obadge">'+q.trackPieces+'</span></div>'
@@ -1300,8 +2116,6 @@ function renderOut(){
   +'<div class="out-row"><span class="olbl">14/2 Wire</span><span class="obadge">'+q.wire14Total+' ft</span></div>'
   +(aRows?'<div class="out-section-head" style="background:transparent;color:var(--muted);font-size:10px;">Feet by Area</div>'+aRows:'')
   +'</div>'
-
-  // COSTS
   +'<div class="out-section">'
   +'<div class="out-section-head">Cost Breakdown</div>'
   +'<div class="out-row"><span class="olbl">Lights &amp; LEDs</span><span class="oval">'+fmt(q.lightCost)+'</span></div>'
@@ -1311,11 +2125,10 @@ function renderOut(){
   +'<div class="out-row"><span class="olbl">Controllers</span><span class="oval">'+fmt(q.ctrlCost+q.pwrCost)+'</span></div>'
   +'<div class="out-row"><span class="olbl">Misc Buffer</span><span class="oval">'+fmt(q.miscBuf)+'</span></div>'
   +'<div class="out-row"><span class="olbl">Shipping</span><span class="oval">'+fmt(S.Shipping_Cost)+'</span></div>'
-  +'<div class="out-row"><span class="olbl">Labor ('+q.lhTotal.toFixed(2)+' hrs)</span><span class="oval">'+fmt(q.laborCost)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Labor — '+q.lab.installHours.toFixed(2)+' hrs install ('+q.difficulty+' '+q.diffMult+'×) · $'+q.lab.rate+'/hr × '+q.crewSize+'</span><span class="oval">'+fmt(q.lab.installLabor)+'</span></div>'
+  +(q.lab.travelHoursTotal>0?'<div class="out-row"><span class="olbl">Travel — '+q.lab.travelMin+' min RT × '+q.lab.days+' day'+(q.lab.days!==1?'s':'')+' +'+(q.lab.travelBuf*100).toFixed(0)+'% · $'+q.lab.rate+'/hr × '+q.crewSize+'</span><span class="oval">'+fmt(q.lab.travelLabor)+'</span></div>':'')
   +'<div class="out-row total"><span class="olbl">Total Cost</span><span class="oval grn">'+fmt(q.totalCost)+'</span></div>'
   +'</div>'
-
-  // PRICING
   +'<div class="out-section">'
   +'<div class="out-section-head">Pricing Summary</div>'
   +'<div class="out-row"><span class="olbl">Base Price ('+pct(q.targetMargin)+')</span><span class="oval">'+fmt(q.recommendedPrice)+'</span></div>'
@@ -1325,15 +2138,13 @@ function renderOut(){
   +'<div class="out-row"><span class="olbl">Gross Profit</span><span class="oval grn">'+fmt(q.grossProfit)+'</span></div>'
   +'<div class="out-row total-dark"><span class="olbl" style="color:#8aaabb;">Final Price</span><span class="oval acc" style="font-size:16px;">'+fmt(q.finalPrice)+'</span></div>'
   +'</div>'
-
-  // HCP
   +'<div class="hcp-block">'
   +'<div class="out-section-head">HouseCall Pro — Enter These Numbers</div>'
   +'<div class="hcp-unit-row">'
   +'<div><div class="hcp-ulabel">Project Area — Unit Sell Price (per ft)</div><div class="hcp-usub">× '+q.measuredFeet.toFixed(0)+' ft = '+fmt(q.hcpPF*q.measuredFeet)+'</div></div>'
   +'<div class="hcp-uprice">'+fmt(q.hcpPF)+'</div>'
   +'</div>'
-  +'<div class="hcp-row"><span class="hlbl">Brain Controller ×'+q.brainControllers+'</span><span class="hval">'+fmt(q.hcpCS)+'</span></div>'
+  +'<div class="hcp-row"><span class="hlbl">'+q.bCtrlName+' ×'+q.brainControllers+'</span><span class="hval">'+fmt(q.hcpCS)+'</span></div>'
   +pHcp
   +'<div class="hcp-row"><span class="hlbl">Shipping &amp; Misc</span><span class="hval">'+fmt(q.hcpSS)+'</span></div>'
   +'<div class="hcp-row"><span class="hlbl">Unit Cost (per ft) — internal</span><span class="hval internal">'+fmt(q.hcpUnit)+'</span></div>'
@@ -1343,12 +2154,115 @@ function renderOut(){
   +'<div class="hcp-row"><span class="hlbl">Tax (8.25%)</span><span class="hval">'+fmt(q.hcpAD*S.Sales_Tax_Rate)+'</span></div>'
   +'<div class="hcp-total"><div class="htlbl">HCP Final Total</div><div class="htval">'+fmt(q.hcpFinal)+'</div></div>'
   +'</div>'
-  +'<div class="margin-ok">✓ '+pct(q.targetMargin)+' margin floor protected &nbsp;·&nbsp; Actual: '+pct(q.actualMargin)+'</div>';
+  +(q.belowFloor
+     ? '<div class="margin-warn">⚠ '+(q.actualMargin<FLOOR_MARGIN?('Actual margin '+pct(q.actualMargin)+' — below your '+pct(FLOOR_MARGIN)+' floor'):('Profit '+fmt(q.grossProfit)+' — below your '+fmt(q.profitFloor)+' minimum'))+'</div>'
+     : '<div class="margin-ok">✓ '+pct(FLOOR_MARGIN)+' margin floor protected &nbsp;·&nbsp; Actual: '+pct(q.actualMargin)+'</div>')
+  +(q.floorApplied?'<div class="margin-ok">↑ price raised to clear your '+fmt(parseFloat(document.getElementById("profitFloor").value)||0)+' minimum profit</div>':'');
 }
 
-// ── PRINT ──
+/* ── JELLYFISH OUTPUT — mirrors the Bosso layout ── */
+function renderOutJelly(){
+  const q=R;
+  const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const pct=n=>(n*100).toFixed(1)+'%';
+  const ft=q.measuredFeet;
+  let aRows='';
+  AREAS.forEach(a=>{const f=q.areaBD[a]||0;if(f>0)aRows+='<div class="out-row"><span class="olbl">'+a+'</span><span class="oval">'+f.toFixed(1)+' ft</span></div>';});
+  const dRow=q.disAmt>0?'<div class="out-row"><span class="olbl">Discount</span><span class="oval red">-'+fmt(q.disAmt)+'</span></div>':'';
+  const wire14Row=q.is12V?'<div class="out-row"><span class="olbl">14/2 Injection Wire ('+q.injections+' inj.)</span><span class="obadge">'+Math.round(q.wire14Feet)+' ft</span></div>':'';
+  const psPartRow=(q.psQty>0)?'<div class="out-row"><span class="olbl">Power Supply ×'+q.psQty+'</span><span class="oval" style="font-size:11px;">'+q.psName+'</span></div>':'';
+  const psCostRow=(q.psQty>0&&q.psTot>0)?'<div class="out-row"><span class="olbl">Power Supply</span><span class="oval">'+fmt(q.psTot)+'</span></div>':'';
+  const psHcp=(q.psQty>0)?'<div class="hcp-row"><span class="hlbl">Power Supply ×'+q.psQty+'</span><span class="hval">'+fmt(q.hcpPS)+'</span></div>':'';
+  const dHcp=q.disAmt>0?'<div class="hcp-row"><span class="hlbl">Discount</span><span class="hval" style="color:var(--red);">'+(q.disMode==='Pct'?(q.disPct*100).toFixed(0)+'%':fmt(q.disAmt))+'</span></div>':'';
+
+  let menuRows='';
+  q.menu.forEach(r=>{
+    const here=Math.abs(r.m-(q.targetMargin*100))<0.6;
+    menuRows+='<div class="out-row'+(here?' hl':'')+'"><span class="olbl">'+r.m+'%'+(here?' ◄':'')+'</span><span class="oval">'+fmt(r.perFt)+'/ft <span style="color:var(--muted);font-weight:400;">('+fmt(r.total)+')</span></span></div>';
+  });
+
+  document.getElementById('quoteOut').innerHTML=
+  '<div class="price-hero">'
+  +'<div class="price-customer">Quote prepared for</div>'
+  +'<div class="price-name">'+q.customerName+'</div>'
+  +'<div class="price-label">Total Installed Price</div>'
+  +'<div class="price-amount">'+fmt(q.finalPrice)+'</div>'
+  +'<div class="price-sub">Includes tax &nbsp;·&nbsp; JellyFish '+q.volt+' &nbsp;·&nbsp; Quote #'+q.hcpQuoteNum+'</div>'
+  +'</div>'
+  +'<div class="out-stats">'
+  +'<div class="stat-cell"><div class="stat-lbl">Measured Ft</div><div class="stat-val acc">'+ft.toFixed(0)+'</div></div>'
+  +'<div class="stat-cell"><div class="stat-lbl">Man-Hours</div><div class="stat-val">'+((q.lab.installHours+q.lab.travelHoursTotal)*q.crew).toFixed(1)+'</div></div>'
+  +'<div class="stat-cell"><div class="stat-lbl">Margin</div><div class="stat-val grn">'+pct(q.actualMargin)+'</div></div>'
+  +'</div>'
+  +dualPriceBlock(q)
+  +'<div class="out-section">'
+  +'<div class="out-section-head"><span>Parts List</span><span style="font-size:11px;color:var(--muted);">'+q.trackName+' — '+q.trackColor+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Eave Strands (50 lights ea)</span><span class="obadge">'+q.strandCt+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Track Sticks (7.5ft)</span><span class="obadge">'+q.trackCt+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Controller ×'+q.ctrlQty+'</span><span class="oval" style="font-size:11px;">'+(q.ctrlName||'—')+'</span></div>'
+  +psPartRow
+  +'<div class="out-row"><span class="olbl">16/4 Wire (jumps + homerun)</span><span class="obadge">'+Math.round(q.wire16Feet)+' ft</span></div>'
+  +wire14Row
+  +((q.rxCount>0||q.txCount>0)?'<div class="out-row"><span class="olbl">Signal Modules</span><span class="obadge">'+q.rxCount+' RX / '+q.txCount+' TX</span></div>':'')
+  +(aRows?'<div class="out-section-head" style="background:transparent;color:var(--muted);font-size:10px;">Feet by Area</div>'+aRows:'')
+  +'</div>'
+  +'<div class="out-section">'
+  +'<div class="out-section-head">Cost Breakdown</div>'
+  +'<div class="out-row"><span class="olbl">Eave Strands</span><span class="oval">'+fmt(q.strandTot)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Track</span><span class="oval">'+fmt(q.trackTot)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Controller</span><span class="oval">'+fmt(q.ctrlTot)+'</span></div>'
+  +psCostRow
+  +'<div class="out-row"><span class="olbl">16/4 Wire ('+Math.round(q.wire16Feet)+' ft @ $'+JF_WIRE16_4_COST_PER_FT.toFixed(2)+')</span><span class="oval">'+fmt(q.wire16Cost)+'</span></div>'
+  +(q.is12V?'<div class="out-row"><span class="olbl">14/2 Injection ('+Math.round(q.wire14Feet)+' ft @ $'+JF_WIRE14_2_COST_PER_FT.toFixed(2)+')</span><span class="oval">'+fmt(q.wire14Cost)+'</span></div>':'')
+  +((q.rxCount>0||q.txCount>0)?'<div class="out-row"><span class="olbl">Signal Modules ('+q.rxCount+' RX + '+q.txCount+' TX)</span><span class="oval">'+fmt(q.moduleCost)+'</span></div>':'')
+  +'<div class="out-row"><span class="olbl">Misc Buffer</span><span class="oval">'+fmt(q.miscBuf)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Shipping</span><span class="oval">'+fmt(JF_SHIPPING_COST)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Labor — '+q.lab.installHours.toFixed(2)+' hrs install ('+q.difficulty+' '+q.diffMult+'×) · $'+q.lab.rate+'/hr × '+q.crew+'</span><span class="oval">'+fmt(q.lab.installLabor)+'</span></div>'
+  +(q.lab.travelHoursTotal>0?'<div class="out-row"><span class="olbl">Travel — '+q.lab.travelMin+' min RT × '+q.lab.days+' day'+(q.lab.days!==1?'s':'')+' +'+(q.lab.travelBuf*100).toFixed(0)+'% · $'+q.lab.rate+'/hr × '+q.crew+'</span><span class="oval">'+fmt(q.lab.travelLabor)+'</span></div>':'')
+  +'<div class="out-row total"><span class="olbl">Total Cost</span><span class="oval grn">'+fmt(q.totalCost)+'</span></div>'
+  +'</div>'
+  +'<div class="out-section">'
+  +'<div class="out-section-head">Pricing Summary</div>'
+  +'<div class="out-row"><span class="olbl">Base Price ('+pct(q.targetMargin)+')</span><span class="oval">'+fmt(q.recommendedPrice)+'</span></div>'
+  +dRow
+  +'<div class="out-row"><span class="olbl">Sales Tax (8.25%)</span><span class="oval">'+fmt(q.taxAmt)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Commission Pay</span><span class="oval">'+fmt(q.commAmt)+'</span></div>'
+  +'<div class="out-row"><span class="olbl">Gross Profit</span><span class="oval grn">'+fmt(q.grossProfit)+'</span></div>'
+  +'<div class="out-row total-dark"><span class="olbl" style="color:#8aaabb;">Final Price</span><span class="oval acc" style="font-size:16px;">'+fmt(q.finalPrice)+'</span></div>'
+  +'</div>'
+  +'<div class="hcp-block">'
+  +'<div class="out-section-head">HouseCall Pro — Enter These Numbers</div>'
+  +'<div class="hcp-unit-row">'
+  +'<div><div class="hcp-ulabel">Project Area — Unit Sell Price (per ft)</div><div class="hcp-usub">× '+ft.toFixed(0)+' ft = '+fmt(q.hcpPF*ft)+'</div></div>'
+  +'<div class="hcp-uprice">'+fmt(q.hcpPF)+'</div>'
+  +'</div>'
+  +'<div class="hcp-row"><span class="hlbl">Controller ×'+q.ctrlQty+'</span><span class="hval">'+fmt(q.hcpCS)+'</span></div>'
+  +psHcp
+  +'<div class="hcp-row"><span class="hlbl">Shipping &amp; Misc</span><span class="hval">'+fmt(q.hcpSS)+'</span></div>'
+  +'<div class="hcp-row"><span class="hlbl">Unit Cost (per ft) — internal</span><span class="hval internal">'+fmt(q.hcpUnit)+'</span></div>'
+  +dHcp
+  +'<div class="hcp-row"><span class="hlbl">Subtotal</span><span class="hval">'+fmt(q.hcpSub)+'</span></div>'
+  +(q.hcpDisAmt>0?'<div class="hcp-row"><span class="hlbl">After Discount</span><span class="hval">'+fmt(q.hcpAD)+'</span></div>':'')
+  +'<div class="hcp-row"><span class="hlbl">Tax (8.25%)</span><span class="hval">'+fmt(q.hcpAD*JF_SALES_TAX_RATE)+'</span></div>'
+  +'<div class="hcp-total"><div class="htlbl">HCP Final Total</div><div class="htval">'+fmt(q.hcpFinal)+'</div></div>'
+  +'</div>'
+  +(q.belowFloor
+     ? '<div class="margin-warn">⚠ '+(q.actualMargin<FLOOR_MARGIN?('Actual margin '+pct(q.actualMargin)+' — below your '+pct(FLOOR_MARGIN)+' floor'):('Profit '+fmt(q.grossProfit)+' — below your '+fmt(q.profitFloor)+' minimum'))+'</div>'
+     : '<div class="margin-ok">✓ '+pct(FLOOR_MARGIN)+' margin floor protected &nbsp;·&nbsp; Actual: '+pct(q.actualMargin)+'</div>')
+  +(q.floorApplied?'<div class="margin-ok">↑ price raised to clear your '+fmt(parseFloat(document.getElementById("profitFloor").value)||0)+' minimum profit</div>':'')
+  +(q.underPowered?'<div class="margin-warn">⚠ '+q.totalLights+' lights exceed the controller\'s capacity and no power supply is selected — pick a power supply.</div>':'')
+  +(q.noStrand?'<div class="margin-warn">⚠ No eave strand exists for '+q.volt+' on the price sheet — strand cost is $0, so this quote is undercharging. Use another voltage or add the '+q.volt+' strand price.</div>':'');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PRINT  (branches by product)
+   ════════════════════════════════════════════════════════════════ */
 function printQuote(){
   if(!R.finalPrice){alert('Complete a quote first.');return;}
+  if(R.product==='jelly') printQuoteJelly(); else printQuoteBosso();
+}
+
+function printQuoteBosso(){
   const q=R;const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');const pct=n=>(n*100).toFixed(1)+'%';
   var aRows='';AREAS.forEach(function(a){var ft=q.areaBD[a]||0;if(ft>0)aRows+='<tr><td>'+a+'</td><td style="text-align:right">'+ft.toFixed(1)+' ft</td></tr>';});
   var jRows='';if(q.jump10)jRows+='<tr><td>Jump Wires 10ft</td><td style="text-align:right">'+q.jump10+'</td></tr>';if(q.jump5)jRows+='<tr><td>Jump Wires 5ft</td><td style="text-align:right">'+q.jump5+'</td></tr>';if(q.jump2)jRows+='<tr><td>Jump Wires 2ft</td><td style="text-align:right">'+q.jump2+'</td></tr>';
@@ -1380,9 +2294,10 @@ function printQuote(){
   +'<div><div style="font-size:9px;text-transform:uppercase;color:#777;">City / Zip</div><div style="font-weight:600;">'+q.customerCityZip+'</div></div></div>'
   +'<div class="banner"><div style="font-size:10px;text-transform:uppercase;color:#555;">Total Installed Price (includes tax)</div>'
   +'<div style="font-size:30px;font-weight:900;">'+fmt(q.finalPrice)+'</div>'
+  +(q.hasDisc?'<div style="font-size:11px;color:#555;margin-top:2px;">Full price '+fmt(q.fullFinal)+' &nbsp;·&nbsp; '+(q.disMode==='Pct'?(q.disPct*100).toFixed(0)+'% off':fmt(q.disAmt)+' off')+' &nbsp;·&nbsp; margin '+pct(q.actualMargin)+(q.belowFloor?(q.actualMargin<FLOOR_MARGIN?' (below '+pct(FLOOR_MARGIN)+' margin floor)':' (below '+fmt(q.profitFloor)+' profit floor)'):'')+'</div>':'')
   +'<div style="font-size:10px;color:#777;margin-top:2px;">'+q.difficulty+' &nbsp;|&nbsp; '+q.measuredFeet.toFixed(0)+' ft &nbsp;|&nbsp; '+q.schedDays+' day'+(q.schedDays!==1?'s':'')+' &nbsp;|&nbsp; '+q.trackStyle+' — '+q.trackColor+'</div></div>'
   +'<div class="two"><div><div class="st">Parts List</div><table>'
-  +'<tr><td>Brain Controllers</td><td style="text-align:right">'+q.brainControllers+'</td></tr>'
+  +'<tr><td>Controller — '+q.bCtrlName+'</td><td style="text-align:right">'+q.brainControllers+'</td></tr>'
   +pRow+'<tr><td>Bags of Lights (50 LEDs)</td><td style="text-align:right">'+q.bags50LED+'</td></tr>'
   +'<tr><td>Track Pieces (6.5ft)</td><td style="text-align:right">'+q.trackPieces+'</td></tr>'
   +'<tr><td>T Connectors</td><td style="text-align:right">'+q.tConn+'</td></tr>'
@@ -1395,7 +2310,8 @@ function printQuote(){
   +'<tr><td>Wire 14/2</td><td style="text-align:right">'+fmt(q.wire14Cost)+'</td></tr>'
   +'<tr><td>Controllers</td><td style="text-align:right">'+fmt(q.ctrlCost+q.pwrCost)+'</td></tr>'
   +'<tr><td>Shipping</td><td style="text-align:right">'+fmt(S.Shipping_Cost)+'</td></tr>'
-  +'<tr><td>Labor ('+q.lhTotal.toFixed(2)+' hrs)</td><td style="text-align:right">'+fmt(q.laborCost)+'</td></tr>'
+  +'<tr><td>Labor — '+q.lab.installHours.toFixed(2)+' hrs install ('+q.difficulty+' '+q.diffMult+'×) · $'+q.lab.rate+'/hr × '+q.crewSize+'</td><td style="text-align:right">'+fmt(q.lab.installLabor)+'</td></tr>'
+  +(q.lab.travelHoursTotal>0?'<tr><td>Travel — '+q.lab.travelMin+' min RT × '+q.lab.days+' day'+(q.lab.days!==1?'s':'')+' +'+(q.lab.travelBuf*100).toFixed(0)+'% · $'+q.lab.rate+'/hr × '+q.crewSize+'</td><td style="text-align:right">'+fmt(q.lab.travelLabor)+'</td></tr>':'')
   +'<tr class="tr"><td>Total Cost</td><td style="text-align:right">'+fmt(q.totalCost)+'</td></tr>'
   +'</table><div class="st" style="margin-top:10px;">Pricing Summary</div><table>'
   +'<tr><td>Base Price ('+pct(q.targetMargin)+')</td><td style="text-align:right">'+fmt(q.recommendedPrice)+'</td></tr>'
@@ -1409,13 +2325,91 @@ function printQuote(){
   +'<div><div style="font-size:11px;color:#555;">Project Area — Unit Sell Price (per ft)</div>'
   +'<div style="font-size:10px;color:#999;">x '+q.measuredFeet.toFixed(0)+' ft = '+fmt(q.hcpPF*q.measuredFeet)+'</div></div>'
   +'<div style="font-size:26px;font-weight:900;">'+fmt(q.hcpPF)+'</div></div><table>'
-  +'<tr><td>Brain Controller x'+q.brainControllers+'</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpCS)+'</td></tr>'
+  +'<tr><td>'+q.bCtrlName+' x'+q.brainControllers+'</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpCS)+'</td></tr>'
   +pHcp+'<tr><td>Shipping &amp; Misc</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpSS)+'</td></tr>'
   +'<tr><td style="color:#777;">Unit Cost (per ft) — internal</td><td style="text-align:right;color:#777;">'+fmt(q.hcpUnit)+'</td></tr>'
   +dHcp+'</table>'
   +'<div class="ht"><div style="font-weight:700;">HCP Final Total</div><div style="font-size:20px;font-weight:900;">'+fmt(q.hcpFinal)+'</div></div>'
   +'<div style="text-align:right;margin-top:6px;font-size:10px;">Margin: '+pct(q.actualMargin)+' &nbsp;|&nbsp; Crew Days: '+q.crewDays.toFixed(2)+'</div>'
   +'</div><div class="ft">NexWave Lighting — Bosso Quote &nbsp;|&nbsp; '+new Date().toLocaleDateString()+' &nbsp;|&nbsp; Internal use only</div>'
+  +'<script>window.onload=function(){window.print();}<\/script></body></html>';
+  var blob=new Blob([html],{type:'text/html'});window.open(URL.createObjectURL(blob),'_blank');
+}
+
+function printQuoteJelly(){
+  const q=R;const fmt=n=>'$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');const pct=n=>(n*100).toFixed(1)+'%';
+  const ft=q.measuredFeet;
+  var aRows='';AREAS.forEach(function(a){var f=q.areaBD[a]||0;if(f>0)aRows+='<tr><td>'+a+'</td><td style="text-align:right">'+f.toFixed(1)+' ft</td></tr>';});
+  var jRows='<tr><td>16/4 Wire (jumps + homerun)</td><td style="text-align:right">'+Math.round(q.wire16Feet)+' ft</td></tr>'+(q.is12V?'<tr><td>14/2 Injection ('+q.injections+' inj.)</td><td style="text-align:right">'+Math.round(q.wire14Feet)+' ft</td></tr>':'')+((q.rxCount>0||q.txCount>0)?'<tr><td>Signal Modules</td><td style="text-align:right">'+q.rxCount+' RX / '+q.txCount+' TX</td></tr>':'');
+  var dRow=q.disAmt>0?'<tr><td>Discount</td><td style="text-align:right">-'+fmt(q.disAmt)+'</td></tr>':'';
+  var psRow=(q.psQty>0&&q.psTot>0)?'<tr><td>Power Supply</td><td style="text-align:right">'+fmt(q.psTot)+'</td></tr>':'';
+  var psPart=(q.psQty>0)?'<tr><td>Power Supply x'+q.psQty+'</td><td style="text-align:right">'+q.psName+'</td></tr>':'';
+  var psHcp=(q.psQty>0)?'<tr><td>Power Supply x'+q.psQty+'</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpPS)+'</td></tr>':'';
+  var dHcp=q.disAmt>0?'<tr><td>Discount</td><td style="text-align:right;font-weight:700;">'+(q.disMode==='Pct'?(q.disPct*100).toFixed(0)+'%':fmt(q.disAmt))+'</td></tr>':'';
+  var aSec=aRows?'<p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #111;padding-bottom:3px;margin:10px 0 6px;">Feet by Area</p><table style="width:100%;border-collapse:collapse;">'+aRows+'</table>':'';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Quote #'+q.hcpQuoteNum+'</title>'
+  +'<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;font-size:12px;color:#111;background:white;padding:20px;max-width:740px;margin:0 auto;}'
+  +'.hdr{display:flex;justify-content:space-between;border-bottom:3px solid #111;padding-bottom:10px;margin-bottom:12px;}'
+  +'.cust{background:#f5f5f5;padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;}'
+  +'.banner{border:2px solid #6D28D9;padding:10px;text-align:center;margin-bottom:12px;}'
+  +'.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;}'
+  +'.st{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-bottom:1.5px solid #111;padding-bottom:3px;margin-bottom:6px;}'
+  +'table{width:100%;border-collapse:collapse;}td{padding:3px 0;border-bottom:1px solid #eee;font-size:11px;}'
+  +'.tr td{font-weight:700;border-top:2px solid #111;border-bottom:none;padding-top:5px;}'
+  +'.hb{border:1.5px solid #6D28D9;padding:10px 12px;}.ht{display:flex;justify-content:space-between;padding-top:8px;border-top:2px solid #6D28D9;margin-top:4px;}'
+  +'.ft{border-top:1px solid #ccc;padding-top:8px;margin-top:12px;font-size:10px;color:#777;text-align:center;}'
+  +'@media print{@page{margin:12mm;size:letter;}}</style></head><body>'
+  +'<div class="hdr"><div><span style="font-size:22px;font-weight:900;letter-spacing:2px;">NEX</span><span style="font-size:22px;font-weight:900;letter-spacing:2px;color:#6D28D9;">WAVE</span>'
+  +'<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#777;margin-top:2px;">Lighting — JellyFish Quote</div></div>'
+  +'<div style="text-align:right;"><div style="font-size:9px;color:#777;text-transform:uppercase;letter-spacing:1px;">Quote Number</div>'
+  +'<div style="font-size:20px;font-weight:700;">#'+q.hcpQuoteNum+'</div>'
+  +'<div style="font-size:10px;color:#777;">'+new Date().toLocaleDateString()+'</div></div></div>'
+  +'<div class="cust"><div><div style="font-size:9px;text-transform:uppercase;color:#777;">Customer</div><div style="font-weight:600;">'+q.customerName+'</div></div>'
+  +'<div><div style="font-size:9px;text-transform:uppercase;color:#777;">Salesman</div><div style="font-weight:600;">'+q.salesMan+'</div></div>'
+  +'<div><div style="font-size:9px;text-transform:uppercase;color:#777;">Address</div><div style="font-weight:600;">'+q.customerAddress+'</div></div>'
+  +'<div><div style="font-size:9px;text-transform:uppercase;color:#777;">City / Zip</div><div style="font-weight:600;">'+q.customerCityZip+'</div></div></div>'
+  +'<div class="banner"><div style="font-size:10px;text-transform:uppercase;color:#555;">Total Installed Price (includes tax)</div>'
+  +'<div style="font-size:30px;font-weight:900;">'+fmt(q.finalPrice)+'</div>'
+  +(q.hasDisc?'<div style="font-size:11px;color:#555;margin-top:2px;">Full price '+fmt(q.fullFinal)+' &nbsp;·&nbsp; '+(q.disMode==='Pct'?(q.disPct*100).toFixed(0)+'% off':fmt(q.disAmt)+' off')+' &nbsp;·&nbsp; margin '+pct(q.actualMargin)+(q.belowFloor?(q.actualMargin<FLOOR_MARGIN?' (below '+pct(FLOOR_MARGIN)+' margin floor)':' (below '+fmt(q.profitFloor)+' profit floor)'):'')+'</div>':'')
+  +'<div style="font-size:10px;color:#777;margin-top:2px;">'+q.difficulty+' &nbsp;|&nbsp; '+ft.toFixed(0)+' ft &nbsp;|&nbsp; '+q.volt+' &nbsp;|&nbsp; '+q.trackName+' — '+q.trackColor+'</div></div>'
+  +'<div class="two"><div><div class="st">Parts List</div><table>'
+  +'<tr><td>Eave Strands (50 lights ea)</td><td style="text-align:right">'+q.strandCt+'</td></tr>'
+  +'<tr><td>Track Sticks (7.5ft)</td><td style="text-align:right">'+q.trackCt+'</td></tr>'
+  +'<tr><td>Controller x'+q.ctrlQty+'</td><td style="text-align:right">'+(q.ctrlName||'—')+'</td></tr>'
+  +psPart
+  +jRows
+  +'</table>'+aSec+'</div>'
+  +'<div><div class="st">Cost Breakdown</div><table>'
+  +'<tr><td>Eave Strands</td><td style="text-align:right">'+fmt(q.strandTot)+'</td></tr>'
+  +'<tr><td>Track</td><td style="text-align:right">'+fmt(q.trackTot)+'</td></tr>'
+  +'<tr><td>Controller</td><td style="text-align:right">'+fmt(q.ctrlTot)+'</td></tr>'
+  +psRow
+  +'<tr><td>16/4 Wire</td><td style="text-align:right">'+fmt(q.wire16Cost)+'</td></tr>'
+  +(q.is12V?'<tr><td>14/2 Injection</td><td style="text-align:right">'+fmt(q.wire14Cost)+'</td></tr>':'')
+  +((q.rxCount>0||q.txCount>0)?'<tr><td>Signal Modules ('+q.rxCount+' RX + '+q.txCount+' TX)</td><td style="text-align:right">'+fmt(q.moduleCost)+'</td></tr>':'')
+  +'<tr><td>Misc Buffer</td><td style="text-align:right">'+fmt(q.miscBuf)+'</td></tr>'
+  +'<tr><td>Shipping</td><td style="text-align:right">'+fmt(JF_SHIPPING_COST)+'</td></tr>'
+  +'<tr><td>Labor</td><td style="text-align:right">'+fmt(q.laborCost)+'</td></tr>'
+  +'<tr class="tr"><td>Total Cost</td><td style="text-align:right">'+fmt(q.totalCost)+'</td></tr>'
+  +'</table><div class="st" style="margin-top:10px;">Pricing Summary</div><table>'
+  +'<tr><td>Base Price ('+pct(q.targetMargin)+')</td><td style="text-align:right">'+fmt(q.recommendedPrice)+'</td></tr>'
+  +dRow+'<tr><td>Sales Tax (8.25%)</td><td style="text-align:right">'+fmt(q.taxAmt)+'</td></tr>'
+  +'<tr><td>Commission</td><td style="text-align:right">'+fmt(q.commAmt)+'</td></tr>'
+  +'<tr><td>Gross Profit</td><td style="text-align:right">'+fmt(q.grossProfit)+'</td></tr>'
+  +'<tr class="tr"><td>Final Price</td><td style="text-align:right">'+fmt(q.finalPrice)+'</td></tr>'
+  +'</table></div></div>'
+  +'<div class="hb"><div class="st" style="margin-bottom:8px;">HouseCall Pro — Enter These Numbers</div>'
+  +'<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:2px solid #6D28D9;margin-bottom:8px;">'
+  +'<div><div style="font-size:11px;color:#555;">Project Area — Unit Sell Price (per ft)</div>'
+  +'<div style="font-size:10px;color:#999;">x '+ft.toFixed(0)+' ft = '+fmt(q.hcpPF*ft)+'</div></div>'
+  +'<div style="font-size:26px;font-weight:900;">'+fmt(q.hcpPF)+'</div></div><table>'
+  +'<tr><td>Controller x'+q.ctrlQty+'</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpCS)+'</td></tr>'
+  +psHcp+'<tr><td>Shipping &amp; Misc</td><td style="text-align:right;font-weight:700;">'+fmt(q.hcpSS)+'</td></tr>'
+  +'<tr><td style="color:#777;">Unit Cost (per ft) — internal</td><td style="text-align:right;color:#777;">'+fmt(q.hcpUnit)+'</td></tr>'
+  +dHcp+'</table>'
+  +'<div class="ht"><div style="font-weight:700;">HCP Final Total</div><div style="font-size:20px;font-weight:900;">'+fmt(q.hcpFinal)+'</div></div>'
+  +'<div style="text-align:right;margin-top:6px;font-size:10px;">Margin: '+pct(q.actualMargin)+' &nbsp;|&nbsp; Man-Hrs: '+((q.lab.installHours+q.lab.travelHoursTotal)*q.crew).toFixed(1)+'</div>'
+  +'</div><div class="ft">NexWave Lighting — JellyFish Quote &nbsp;|&nbsp; '+new Date().toLocaleDateString()+' &nbsp;|&nbsp; Internal use only</div>'
   +'<script>window.onload=function(){window.print();}<\/script></body></html>';
   var blob=new Blob([html],{type:'text/html'});window.open(URL.createObjectURL(blob),'_blank');
 }
@@ -1427,9 +2421,18 @@ function resetAll(){
   document.getElementById('homerunFt').value='30';
   document.getElementById('crewSize').value='2';
   document.getElementById('workHoursDay').value='10';
+  document.getElementById('paceSel').value='200';
+  document.getElementById('rateSel').value='40';
+  document.getElementById('travelBufSel').value='4';
+  document.getElementById('travelMin').value='0';
+  document.getElementById('zoneMatchNote').textContent='Type minutes, or save the zip as a zone to auto-fill next time.';
+  document.getElementById('jfCtrlQty').value='1';
+  document.getElementById('jfPsQty').value='1';
+  document.getElementById('profitFloor').value='800';
   document.getElementById('segBody').innerHTML='';
   segN=0;jLog=[];jId=0;renderJumps();
   setDiff('Normal');setM('Preset');setBuf('Pct');setDis('None');setComm('Pct');
+  jfVolt='48V';document.getElementById('jfVolt').value='48V';refreshJFVolt();
   addSeg();R={};
   document.getElementById('quoteChip').textContent='QUOTE #—';
   document.getElementById('emptyMsg').style.display='flex';
